@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AnyTone D890UV Contact List Download</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
+        h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .subtitle { color: #666; margin-bottom: 2rem; }
+        .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card h2 { font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 2px solid #0066cc; padding-bottom: 0.5rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid #eee; }
+        th { font-weight: 600; color: #444; font-size: 0.85rem; text-transform: uppercase; }
+        a.dl { color: #0066cc; font-weight: 600; text-decoration: none; }
+        a.dl:hover { text-decoration: underline; }
+        .info { background: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 6px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .footer { text-align: center; color: #888; font-size: 0.85rem; margin-top: 2rem; }
+        .badge { display: inline-block; background: #e8f5e9; color: #2e7d32; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AnyTone D890UV Contact List Download</h1>
+        <p class="subtitle">Screen-character-compliant DMR &amp; NXDN contact lists generated from <a href="https://radioid.net">radioid.net</a></p>
+
+        <div class="info">
+            All non-ASCII characters (Turkish, German, Cyrillic, CJK, etc.) are transliterated to ASCII
+            so they display correctly on the radio screen. Names are truncated to 16 characters.
+            Lists are updated daily at 06:00 UTC.
+        </div>
+
+        <div class="card">
+            <h2>DMR Contact Lists</h2>
+            <table>
+                <tr><th>Region</th><th>File</th><th>Download</th></tr>
+                <tr>
+                    <td>Turkey</td>
+                    <td>DMR Digital Contact List - Turkey.csv</td>
+                    <td><a class="dl" href="DMR%20Digital%20Contact%20List%20-%20Turkey.csv" download>Download</a></td>
+                </tr>
+                <tr>
+                    <td>World</td>
+                    <td>DMR Digital Contact List - World.csv</td>
+                    <td><a class="dl" href="DMR%20Digital%20Contact%20List%20-%20World.csv" download>Download</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>NXDN Contact Lists</h2>
+            <table>
+                <tr><th>Region</th><th>File</th><th>Download</th></tr>
+                <tr>
+                    <td>Turkey</td>
+                    <td>NX Digital Contact List - Turkey.csv</td>
+                    <td><a class="dl" href="NX%20Digital%20Contact%20List%20-%20Turkey.csv" download>Download</a></td>
+                </tr>
+                <tr>
+                    <td>World</td>
+                    <td>NX Digital Contact List - World.csv</td>
+                    <td><a class="dl" href="NX%20Digital%20Contact%20List%20-%20World.csv" download>Download</a></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>How to Import</h2>
+            <ol style="padding-left: 1.2rem;">
+                <li>Download the CSV file for your region</li>
+                <li>Open AnyTone CPS software</li>
+                <li>For DMR: go to <strong>DMR &gt; Digital Contact List</strong></li>
+                <li>For NXDN: go to <strong>NX &gt; NX Digital Contact List</strong></li>
+                <li>Use <strong>Tool &gt; Import</strong> and select the CSV file</li>
+                <li>Write the codeplug to the radio</li>
+            </ol>
+        </div>
+
+        <p class="footer">
+            Last generated: <span class="badge">{{GENERATED_DATE}}</span><br>
+            <a href="https://github.com/TA3HRJ/anytone-d890uv-contact-generator">Source code on GitHub</a>
+            &middot; TA3HRJ &amp; TA3PKS
+        </p>
+    </div>
+</body>
+</html>
