@@ -15,6 +15,18 @@ NXDN_URL = "https://radioid.net/static/nxdn.csv"
 NAME_MAX_LEN = 16
 OUTPUT_DIR = Path(__file__).parent / "output"
 
+EUROPE_COUNTRIES = {
+    "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium",
+    "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic",
+    "Czechia", "Denmark", "Estonia", "Finland", "France", "Georgia", "Germany",
+    "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo",
+    "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova",
+    "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland",
+    "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia",
+    "Spain", "Sweden", "Switzerland", "Turkiye", "Turkey", "Ukraine",
+    "United Kingdom", "Vatican City",
+}
+
 DMR_HEADER = ["No.", "Radio ID", "Callsign", "Name", "City", "State", "Country",
               "Remarks", "Call Type", "Call Alert"]
 NXDN_HEADER = ["RADIO_ID", "CALLSIGN", "FIRST_NAME", "LAST_NAME", "CITY", "STATE",
@@ -178,14 +190,18 @@ def main() -> None:
     print("\nProcessing NXDN...")
     nxdn_records = parse_nxdn(nxdn_raw)
 
-    turkey_names = {"Turkey", "Turkiye", "Türkiye"}
+    turkey_names = {"Turkey", "Turkiye"}
     dmr_turkey = [r for r in dmr_records if r["country"] in turkey_names]
+    dmr_europe = [r for r in dmr_records if r["country"] in EUROPE_COUNTRIES]
     nxdn_turkey = [r for r in nxdn_records if r["country"] in turkey_names]
+    nxdn_europe = [r for r in nxdn_records if r["country"] in EUROPE_COUNTRIES]
 
     print("\nWriting CSV files...")
     write_dmr_csv(dmr_turkey, OUTPUT_DIR / "DMR Digital Contact List - Turkey.csv")
+    write_dmr_csv(dmr_europe, OUTPUT_DIR / "DMR Digital Contact List - Europe.csv")
     write_dmr_csv(dmr_records, OUTPUT_DIR / "DMR Digital Contact List - World.csv")
     write_nxdn_csv(nxdn_turkey, OUTPUT_DIR / "NX Digital Contact List - Turkey.csv")
+    write_nxdn_csv(nxdn_europe, OUTPUT_DIR / "NX Digital Contact List - Europe.csv")
     write_nxdn_csv(nxdn_records, OUTPUT_DIR / "NX Digital Contact List - World.csv")
 
     print("\nDone!")

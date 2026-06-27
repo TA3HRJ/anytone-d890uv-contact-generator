@@ -74,4 +74,4 @@ MIT License — see [LICENSE](LICENSE) file.
 
 ## Credits
 
-Developed by TA3HRJ & TA3PKS
+Developed by TA3HRJ
