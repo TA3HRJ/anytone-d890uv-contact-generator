@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import csv
 import io
+import json
 import sys
 import urllib.request
 from pathlib import Path
@@ -203,6 +204,17 @@ def main() -> None:
     write_nxdn_csv(nxdn_turkey, OUTPUT_DIR / "NX Digital Contact List - Turkey.csv")
     write_nxdn_csv(nxdn_europe, OUTPUT_DIR / "NX Digital Contact List - Europe.csv")
     write_nxdn_csv(nxdn_records, OUTPUT_DIR / "NX Digital Contact List - World.csv")
+
+    stats = {
+        "dmr_turkey": len(dmr_turkey),
+        "dmr_europe": len(dmr_europe),
+        "dmr_world": len(dmr_records),
+        "nxdn_turkey": len(nxdn_turkey),
+        "nxdn_europe": len(nxdn_europe),
+        "nxdn_world": len(nxdn_records),
+    }
+    with open(OUTPUT_DIR / "stats.json", "w") as f:
+        json.dump(stats, f)
 
     print("\nDone!")
 

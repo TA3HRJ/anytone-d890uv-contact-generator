@@ -15,6 +15,7 @@
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid #eee; }
         th { font-weight: 600; color: #444; font-size: 0.85rem; text-transform: uppercase; }
+        td.count { text-align: right; font-variant-numeric: tabular-nums; color: #555; }
         a.dl { color: #0066cc; font-weight: 600; text-decoration: none; }
         a.dl:hover { text-decoration: underline; }
         .info { background: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 6px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.9rem; }
@@ -36,20 +37,20 @@
         <div class="card">
             <h2>DMR Contact Lists</h2>
             <table>
-                <tr><th>Region</th><th>File</th><th>Download</th></tr>
+                <tr><th>Region</th><th>Records</th><th>Download</th></tr>
                 <tr>
                     <td>Turkey</td>
-                    <td>DMR Digital Contact List - Turkey.csv</td>
+                    <td class="count" id="dmr_turkey">-</td>
                     <td><a class="dl" href="DMR%20Digital%20Contact%20List%20-%20Turkey.csv" download>Download</a></td>
                 </tr>
                 <tr>
                     <td>Europe</td>
-                    <td>DMR Digital Contact List - Europe.csv</td>
+                    <td class="count" id="dmr_europe">-</td>
                     <td><a class="dl" href="DMR%20Digital%20Contact%20List%20-%20Europe.csv" download>Download</a></td>
                 </tr>
                 <tr>
                     <td>World</td>
-                    <td>DMR Digital Contact List - World.csv</td>
+                    <td class="count" id="dmr_world">-</td>
                     <td><a class="dl" href="DMR%20Digital%20Contact%20List%20-%20World.csv" download>Download</a></td>
                 </tr>
             </table>
@@ -58,20 +59,20 @@
         <div class="card">
             <h2>NXDN Contact Lists</h2>
             <table>
-                <tr><th>Region</th><th>File</th><th>Download</th></tr>
+                <tr><th>Region</th><th>Records</th><th>Download</th></tr>
                 <tr>
                     <td>Turkey</td>
-                    <td>NX Digital Contact List - Turkey.csv</td>
+                    <td class="count" id="nxdn_turkey">-</td>
                     <td><a class="dl" href="NX%20Digital%20Contact%20List%20-%20Turkey.csv" download>Download</a></td>
                 </tr>
                 <tr>
                     <td>Europe</td>
-                    <td>NX Digital Contact List - Europe.csv</td>
+                    <td class="count" id="nxdn_europe">-</td>
                     <td><a class="dl" href="NX%20Digital%20Contact%20List%20-%20Europe.csv" download>Download</a></td>
                 </tr>
                 <tr>
                     <td>World</td>
-                    <td>NX Digital Contact List - World.csv</td>
+                    <td class="count" id="nxdn_world">-</td>
                     <td><a class="dl" href="NX%20Digital%20Contact%20List%20-%20World.csv" download>Download</a></td>
                 </tr>
             </table>
@@ -95,5 +96,13 @@
             &middot; TA3HRJ
         </p>
     </div>
+    <script>
+        fetch("stats.json")
+            .then(r => r.json())
+            .then(s => {
+                for (const [k, v] of Object.entries(s))
+                    document.getElementById(k).textContent = v.toLocaleString();
+            });
+    </script>
 </body>
 </html>

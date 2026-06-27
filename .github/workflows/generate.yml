@@ -29,7 +29,7 @@ jobs:
       - name: Build Pages site
         run: |
           mkdir -p _site
-          cp output/*.csv _site/
+          cp output/*.csv output/stats.json _site/
           cp index.html _site/
           DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
           sed -i "s/{{GENERATED_DATE}}/$DATE/g" _site/index.html

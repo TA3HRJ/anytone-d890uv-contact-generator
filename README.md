@@ -6,7 +6,7 @@ Generate screen-character-compliant DMR and NXDN contact list CSV files for AnyT
 
 - **DMR & NXDN support** — generates both `DMR Digital Contact List` and `NX Digital Contact List` CSV files
 - **ASCII transliteration** — converts all non-ASCII characters (Turkish ÇİĞÖŞÜ, German äöü, Cyrillic, CJK, etc.) to their closest ASCII equivalents so they display correctly on the radio screen
-- **Regional filtering** — produces separate Turkey and World files
+- **Regional filtering** — produces separate Turkey, Europe, and World files
 - **D890UV CPS compatible** — output format matches the CPS import/export format exactly
 - **Duplicate removal** — removes duplicate Radio ID entries
 - **Smart name truncation** — respects the 16-character display limit, avoids cutting words in half
@@ -16,8 +16,10 @@ Generate screen-character-compliant DMR and NXDN contact list CSV files for AnyT
 | File | Description |
 |------|-------------|
 | `DMR Digital Contact List - Turkey.csv` | DMR contacts registered in Turkey |
+| `DMR Digital Contact List - Europe.csv` | DMR contacts registered in Europe |
 | `DMR Digital Contact List - World.csv` | All DMR contacts worldwide |
 | `NX Digital Contact List - Turkey.csv` | NXDN contacts registered in Turkey |
+| `NX Digital Contact List - Europe.csv` | NXDN contacts registered in Europe |
 | `NX Digital Contact List - World.csv` | All NXDN contacts worldwide |
 
 ## Requirements
@@ -40,7 +42,7 @@ python generator.py
 The script will:
 1. Download the latest DMR and NXDN dumps from radioid.net
 2. Process and transliterate all names and fields
-3. Generate 4 CSV files in the `output/` directory
+3. Generate 6 CSV files in the `output/` directory (Turkey, Europe, World for each protocol)
 
 ### Importing to D890UV
 
