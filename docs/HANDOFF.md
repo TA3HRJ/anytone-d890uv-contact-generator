@@ -4,7 +4,7 @@ Son güncelleme: 2026-09-08
 
 ## Nerede kalındı
 
-Altı iş bitti ve gerçek veriyle doğrulandı:
+Yedi iş bitti ve gerçek veriyle doğrulandı:
 
 ### 1. Avrupa/Türkiye filtresi artık MCC'ye bakıyor
 
@@ -109,6 +109,22 @@ eşleştiriliyor, başlık aramasıyla değil (arama indeksi gecikebiliyor).
 Üretim etkilenmedi (`deploy` işi hiç koşmadı). Test dalı ve issue temizlendi;
 Actions geçmişinde iki başarısız çalıştırma kaydı bu yüzden duruyor.
 
+### 7. Üretim tarihi stats.json'a taşındı, sayfa artık build'de yamalanmıyor
+
+Tarih HTML'e `sed` ile gömülüyor, sayılar ayrı bir istekle geliyordu; ikisi ayrı
+önbelleklendiği için taze tarih eski sayılarla görünebiliyordu (bkz. 4. iş). Buna karşı
+`fetch`'e ikinci bir `sed` ile sürüm anahtarı basılmıştı.
+
+Tarih artık `stats.json` içinde (`generated_at`). Sayfa ikisini **tek istekte** aldığı için
+ayrışma yapısal olarak imkânsız; sürüm anahtarına gerek kalmadı ve build adımı üç kopyalama
+komutuna indi. `index.html` depodaki hâliyle yayınlanabilir durumda.
+
+**Eski tuzak kapatıldı:** sayfa `stats.json`'daki anahtarları artık körlemesine dolaşmıyor,
+beklediği alanları tek tek okuyor. `generated_at` eklenmesi eskiden `null.textContent` ile
+scripti patlatıp tablodaki bütün sayıları `-` bırakırdı. Sözleşme teste bağlandı: her sayının
+sayfada bir hücresi olduğu, tarih için yer bulunduğu ve sayfada doldurulmamış yer tutucu
+kalmadığı doğrulanıyor (89 test).
+
 ## Ölçülen sonuç (2026-09-07 verisi)
 
 | Liste | Kayıt |
@@ -122,18 +138,44 @@ Actions geçmişinde iki başarısız çalıştırma kaydı bu yüzden duruyor.
 
 ## Açık kalanlar
 
-Öncelik sırasıyla, hiçbiri başlanmadı:
+Öncelik sırasıyla:
 
-1. **Büyük dosyaları gzip/zip sunmak** — DMR Dünya 31 MB.
-2. **`stats.json`'a üretim tarihi koyup build'deki iki `sed`'i (`{{GENERATED_DATE}}`,
-   `{{VERSION}}`) kaldırmak.** DİKKAT: `index.html` `stats.json`'daki *her* anahtarı
-   `getElementById(k)` ile arıyor; karşılığı olmayan bir anahtar eklenirse script
-   `null.textContent` ile patlar ve tablodaki bütün sayılar `-` kalır. Anahtar eklerken
-   `index.html` aynı commit'te güncellenmeli. Ayrıca sürüm anahtarını kaldırmak
-   yukarıdaki 4. işte anlatılan önbellek ayrışmasını geri getirir — yerine `cache: "no-cache"` gibi bir şey konmalı.
-3. **Ülke seçmeli üretim** — veride 186 ülke var; her ülke için ayrı CSV + sitede seçici.
+1. **Büyük dosyaları gzip/zip sunmak** — DMR Dünya 31 MB. Kullanıcı 2026-09-08'de
+   "şimdilik pas" dedi; sıkıştırma indirmeyi hızlandırır ama kullanıcıya bir adım ekler.
+2. **Ülke seçmeli üretim** — veride 186 ülke var; her ülke için ayrı CSV + sitede seçici.
    **Bilinçli olarak ertelendi (2026-09-07).** Kullanıcının koyduğu sınır: indirme sayfasının
    sade ve işlevsel tasarımı zarar görmemeli. 186 satırlık bir liste ya da ağır bir seçici
    arayüz bu şartı çiğner; iş yeniden ele alınırken önce tasarımın nasıl korunacağı
    çözülmeli, üretim tarafı ondan sonra gelir.
-4. **Talkgroup listesi** (Brandmeister) — D890UV "Talk Groups" CSV'si, deponun eksik ikinci yarısı.
+
+## Yapılmamasına karar verilenler
+
+**Talkgroup listesi üretmek (2026-09-08'de kapatıldı).** Uzun süre "deponun eksik ikinci
+yarısı" diye listede duruyordu; ölçünce iki ayrı sebepten kötü bir fikir olduğu çıktı.
+
+*Sıralama bağlılığı:* CPS'te kanallar ve zone'lar TG'lere sıra numarasıyla bağlı. Üretilen
+liste mevcut listenin üzerine yazıldığında her kanal başka bir TG'yi gösterir. Kullanıcının
+listesinde ayrıca RadioID'ler `Private Call` + `Ring` olarak TG'ymiş gibi kayıtlı (direkt
+çağrı için); üretilen hiçbir liste bunları bilemez.
+
+*Kaynak veri yetersiz:* kullanıcının listesinden 29 TG örneklendi, Brandmeister'da yalnızca
+15'i vardı. Eksikler arasında TGIF ağının TG'leri (111/113/114/123 — BM'de değil, ayrı ağ),
+bazı Türkiye il TG'leri (2863, 28660), köprü/servis TG'leri (66860 TR YSF, 262999 APRS,
+284997 Echolink) ve yerel olanlar (286911 AFET 2, 2862012 AKRAD) var. Var olanlarda bile
+adlandırma tutmuyor: `TG28635 Izmir` yerine `Türkiye Izmir`, `PC4000 Disconnec` yerine
+`Disconnect`.
+
+*Asıl ayrım:* kişi listesi kişisel değil — 312.827 kayıt, her gün değişiyor, herkes için
+aynı; otomasyonun tam yeri. TG listesi kişisel — ~117 satır, neredeyse hiç değişmiyor,
+içeriği ve sırası kullanıcının kanal kurgusuna bağlı. Otomasyon burada az kazandırıp çok
+riske atıyor.
+
+Yine de yapılacaksa tek makul biçim şu: mevcut TG dosyasını girdi alıp **yalnızca sona
+ekleyen** bir birleştirici — indeksler korunur. Site üzerinden dağıtılan bir liste değil,
+elle beslenen bir araç olur ve yukarıdaki eksik veri sorunu yine devam eder.
+
+CPS dışa aktarma formatları (ileride lazım olursa, cihazdan alındı):
+- DMR: `"No.","Radio ID","Name","Call Type","Call Alert"` — ad 16 karakter, `Call Type`
+  satır bazında `Group Call` / `Private Call`.
+- NXDN: başlık kişi listesiyle birebir aynı; ayrım `Attr` sütununda (TG'de `1`, kişide `0`).
+  Sıra sütunu yok, `FIRST_NAME` 16 karaktere boşlukla dolduruluyor.
