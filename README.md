@@ -2,6 +2,13 @@
 
 Generate screen-character-compliant DMR and NXDN contact list CSV files for AnyTone D890UV (also compatible with D878UV) from [radioid.net](https://radioid.net) database dumps.
 
+## Download
+
+**→ [ta3hrj.github.io/anytone-d890uv-contact-generator](https://ta3hrj.github.io/anytone-d890uv-contact-generator/)**
+
+Ready-to-import CSV files, regenerated automatically every day at 06:00 UTC. No need to run
+anything yourself — just pick your region and import into the CPS.
+
 ## Features
 
 - **DMR & NXDN support** — generates both `DMR Digital Contact List` and `NX Digital Contact List` CSV files
@@ -38,6 +45,9 @@ pip install -r requirements.txt
 ```
 
 ## Usage
+
+Only needed if you want to build the lists yourself — otherwise grab them from the
+[download page](https://ta3hrj.github.io/anytone-d890uv-contact-generator/).
 
 ```bash
 python generator.py
