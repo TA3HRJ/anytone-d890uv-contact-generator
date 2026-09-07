@@ -277,6 +277,25 @@ def test_parse_dmr_transliterates_all_fields():
     assert all(v.isascii() for r in records for v in r.values())
 
 
+def test_nameless_record_falls_back_to_callsign():
+    # radioid.net'te ismi boş kayıtlar var; ekranda boş satır görünmesin
+    raw = ("RADIO_ID,CALLSIGN,FIRST_NAME,LAST_NAME,CITY,STATE,COUNTRY\n"
+           "2021682,SZ1GRC,,,Athens,,Greece\n")
+    assert g.parse_dmr(raw)[0]["name"] == "SZ1GRC"
+
+
+def test_callsign_fallback_respects_display_limit():
+    raw = ("RADIO_ID,CALLSIGN,FIRST_NAME,LAST_NAME,CITY,STATE,COUNTRY\n"
+           "2021683,ABCDEFGHIJKLMNOPQRSTU,,,Athens,,Greece\n")
+    assert len(g.parse_dmr(raw)[0]["name"]) <= g.NAME_MAX_LEN
+
+
+def test_real_name_wins_over_callsign():
+    raw = ("RADIO_ID,CALLSIGN,FIRST_NAME,LAST_NAME,CITY,STATE,COUNTRY\n"
+           "2860001,TA3HRJ,Erhan,,Izmir,,Turkiye\n")
+    assert g.parse_dmr(raw)[0]["name"] == "Erhan"
+
+
 def test_parse_nxdn_keeps_first_and_last_separate():
     raw = ("RADIO_ID,CALLSIGN,FIRST_NAME,LAST_NAME,CITY,STATE,COUNTRY\n"
            "615,TA1SA,Yener,Güneş,İstanbul,Marmara Region,Turkiye\n")

@@ -139,6 +139,7 @@ def parse_dmr(raw: str) -> list[dict]:
     transliterated = 0
     skipped_dup = 0
     skipped_invalid = 0
+    named_from_callsign = 0
 
     for row in reader:
         radio_id = row.get("RADIO_ID", "").strip()
@@ -158,6 +159,10 @@ def parse_dmr(raw: str) -> list[dict]:
         name = clean_name(first, last)
         if name != name_raw:
             transliterated += 1
+        if not name:
+            # Telsiz ekranında boş satır yerine çağrı işareti görünsün.
+            name = truncate_name(unidecode(callsign))
+            named_from_callsign += 1
 
         records.append({
             "radio_id": radio_id,
@@ -171,6 +176,7 @@ def parse_dmr(raw: str) -> list[dict]:
     print(f"  Parsed {len(records):,} DMR records")
     print(f"  Removed {skipped_dup:,} duplicates, {skipped_invalid:,} invalid")
     print(f"  Transliterated {transliterated:,} names")
+    print(f"  Used callsign as name for {named_from_callsign:,} records")
     return records
 
 
