@@ -39,6 +39,9 @@ jobs:
           cp index.html _site/
           DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
           sed -i "s/{{GENERATED_DATE}}/$DATE/g" _site/index.html
+          # stats.json'u sayfayla aynı sürüme bağla; ayrı önbelleklendikleri için
+          # bu olmadan taze tarih eski sayılarla birlikte görünebiliyor.
+          sed -i "s/{{VERSION}}/$(date -u +%Y%m%d%H%M)/g" _site/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

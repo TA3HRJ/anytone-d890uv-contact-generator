@@ -97,7 +97,9 @@
         </p>
     </div>
     <script>
-        fetch("stats.json")
+        // Sürüm anahtarı build sırasında damgalanıyor. Sayfa ve stats.json ayrı
+        // önbelleklendiği için bu olmadan taze bir tarih eski sayılarla eşleşebiliyordu.
+        fetch("stats.json?v={{VERSION}}")
             .then(r => r.json())
             .then(s => {
                 for (const [k, v] of Object.entries(s))
