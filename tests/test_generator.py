@@ -75,6 +75,62 @@ def test_clean_name_is_ascii_for_cyrillic():
     assert g.clean_name("Дмитрий", "").isascii()
 
 
+# --- Büyük/küçük harf düzeltmesi ----------------------------------------------
+
+@pytest.mark.parametrize("raw,expected", [
+    ("ESMERALDO", "Esmeraldo"),
+    ("adriano", "Adriano"),
+    ("ANDERSON DOS SANTOS", "Anderson Dos Santos"),
+    ("PALMA DE MALLORCA", "Palma De Mallorca"),
+])
+def test_uniform_case_is_normalised(raw, expected):
+    assert g.normalize_case(raw) == expected
+
+
+@pytest.mark.parametrize("already_correct", [
+    "McDonald", "MacKenzie", "LaSalle", "DeBaer",
+    "Harry McLean", "Ann MacKenzie", "Jean-Pierre",
+])
+def test_mixed_case_is_left_alone(already_correct):
+    # Bu isimler kaynakta zaten doğru; .title() uygulamak bozardı
+    assert g.normalize_case(already_correct) == already_correct
+
+
+@pytest.mark.parametrize("callsign_like", ["K2BSA", "SV8JNL", "AO-27", "PU7MDH"])
+def test_tokens_with_digits_are_left_alone(callsign_like):
+    # İsim alanına yazılmış çağrı işaretleri; küçültmek okunmaz hale getirir
+    assert g.normalize_case(callsign_like) == callsign_like
+
+
+def test_initials_survive():
+    # title() tek harfe dokunmuyor, ayrı bir kural gerekmiyor
+    assert g.normalize_case("J W SMITH") == "J W Smith"
+    assert g.normalize_case("j w smith") == "J W Smith"
+
+
+def test_case_fix_applies_through_clean_name():
+    assert g.clean_name("ESMERALDO", "FORTALEZA") == "Esmeraldo"
+    assert g.clean_name("carlos", "") == "Carlos"
+
+
+def test_case_fix_applies_to_places():
+    assert g.clean_place("FORTALEZA") == "Fortaleza"
+    assert g.clean_place("ribeirao pires") == "Ribeirao Pires"
+    assert g.clean_place("") == ""
+
+
+def test_callsign_fallback_is_not_lowercased():
+    # Çağrı işareti isim alanına düşerse büyük harf kalmalı
+    raw = ("RADIO_ID,CALLSIGN,FIRST_NAME,LAST_NAME,CITY,STATE,COUNTRY\n"
+           "2021682,SZ1GRC,,,Athens,,Greece\n")
+    assert g.parse_dmr(raw)[0]["name"] == "SZ1GRC"
+
+
+def test_country_is_not_case_normalised():
+    # Bölge filtresi ülke adına bakıyor; buraya dokunmak eşleşmeyi etkiler
+    assert g.transliterate_field("UNITED KINGDOM") == "UNITED KINGDOM"
+
+
 # --- Ülke eşleşmesi -----------------------------------------------------------
 
 @pytest.mark.parametrize("spelling", [

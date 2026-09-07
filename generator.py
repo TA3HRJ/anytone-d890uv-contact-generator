@@ -116,6 +116,35 @@ def truncate_name(name: str) -> str:
     return truncated
 
 
+def normalize_case(value: str) -> str:
+    """CAPS LOCK ile ya da tamamen küçük harfle girilmiş parçaları düzeltir.
+
+    radioid.net kayıtlarının bir kısmı "ESMERALDO", bir kısmı "adriano" biçiminde;
+    telsiz listesinde bunlar yan yana durunca dağınık görünüyor.
+
+    Dokunulmayanlar, ikisi de gerçek veride ölçüldü:
+    - Karışık kutulu parçalar (McDonald, MacKenzie, LaSalle) — zaten doğru yazılmış,
+      düzleştirmek bozardı.
+    - Rakam içeren parçalar — isim alanına yazılmış çağrı işaretleri (K2BSA, SV8JNL).
+
+    Baş harfler ayrı bir kural istemiyor: title() tek harfi olduğu gibi bırakıyor,
+    "J W SMITH" -> "J W Smith".
+
+    Tamamı büyük yazılmış bir ad zaten kendi iç kutulamasını kaybetmiş durumda;
+    "MCDONALD" buradan "Mcdonald" çıkar, "McDonald" değil. Bilgi kaynakta yok.
+    """
+    parts = []
+    for token in value.split():
+        letters = [c for c in token if c.isalpha()]
+        uniform = (all(c.isupper() for c in letters)
+                   or all(c.islower() for c in letters))
+        if uniform and not any(c.isdigit() for c in token):
+            parts.append(token.title())
+        else:
+            parts.append(token)
+    return " ".join(parts)
+
+
 def clean_name(first: str, last: str) -> str:
     parts = []
     if first.strip():
@@ -124,12 +153,18 @@ def clean_name(first: str, last: str) -> str:
         parts.append(last.strip())
     combined = " ".join(parts)
     combined = " ".join(combined.split())
-    combined = unidecode(combined)
+    combined = normalize_case(unidecode(combined))
     return truncate_name(combined)
 
 
 def transliterate_field(value: str) -> str:
+    """Ülke adı için kullanılmaz — bölge filtresi ham değere bakıyor."""
     return unidecode(value.strip()) if value.strip() else ""
+
+
+def clean_place(value: str) -> str:
+    """Şehir ve bölge alanları da karışık kutulu geliyor (FORTALEZA, osasco)."""
+    return normalize_case(transliterate_field(value))
 
 
 def parse_dmr(raw: str) -> list[dict]:
@@ -168,14 +203,14 @@ def parse_dmr(raw: str) -> list[dict]:
             "radio_id": radio_id,
             "callsign": callsign,
             "name": name,
-            "city": transliterate_field(row.get("CITY", "")),
-            "state": transliterate_field(row.get("STATE", "")),
+            "city": clean_place(row.get("CITY", "")),
+            "state": clean_place(row.get("STATE", "")),
             "country": transliterate_field(row.get("COUNTRY", "")),
         })
 
     print(f"  Parsed {len(records):,} DMR records")
     print(f"  Removed {skipped_dup:,} duplicates, {skipped_invalid:,} invalid")
-    print(f"  Transliterated {transliterated:,} names")
+    print(f"  Rewrote {transliterated:,} names (transliteration and capitalisation)")
     print(f"  Used callsign as name for {named_from_callsign:,} records")
     return records
 
@@ -201,8 +236,8 @@ def parse_nxdn(raw: str) -> list[dict]:
 
         first_raw = row.get("FIRST_NAME", "").strip()
         last_raw = row.get("LAST_NAME", "").strip()
-        first = truncate_name(unidecode(first_raw)) if first_raw else ""
-        last = truncate_name(unidecode(last_raw)) if last_raw else ""
+        first = truncate_name(normalize_case(unidecode(first_raw))) if first_raw else ""
+        last = truncate_name(normalize_case(unidecode(last_raw))) if last_raw else ""
         if first != first_raw or last != last_raw:
             transliterated += 1
 
@@ -211,14 +246,14 @@ def parse_nxdn(raw: str) -> list[dict]:
             "callsign": row.get("CALLSIGN", "").strip(),
             "first_name": first,
             "last_name": last,
-            "city": transliterate_field(row.get("CITY", "")),
-            "state": transliterate_field(row.get("STATE", "")),
+            "city": clean_place(row.get("CITY", "")),
+            "state": clean_place(row.get("STATE", "")),
             "country": transliterate_field(row.get("COUNTRY", "")),
         })
 
     print(f"  Parsed {len(records):,} NXDN records")
     print(f"  Removed {skipped_dup:,} duplicates, {skipped_invalid:,} invalid")
-    print(f"  Transliterated {transliterated:,} names")
+    print(f"  Rewrote {transliterated:,} names (transliteration and capitalisation)")
     return records
 
 
