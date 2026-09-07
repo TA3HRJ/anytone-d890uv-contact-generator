@@ -10,14 +10,20 @@ permissions:
   pages: write
   id-token: write
 
+# Elle tetikleme zamanlanmış çalıştırmayla çakışırsa ikisi aynı anda Pages'e
+# deploy etmeye çalışır. Sıraya alınsınlar; devam eden üretim iptal edilmesin.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 20   # asılı kalan indirme runner'ı saatlerce meşgul etmesin
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -44,7 +50,7 @@ jobs:
           sed -i "s/{{VERSION}}/$(date -u +%Y%m%d%H%M)/g" _site/index.html
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
@@ -57,4 +63,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
