@@ -117,11 +117,8 @@ sayılar birbiriyle tutarlı.
    `index.html` aynı commit'te güncellenmeli. Ayrıca sürüm anahtarını kaldırmak 4. maddedeki
    önbellek ayrışmasını geri getirir — yerine `cache: "no-cache"` gibi bir şey konmalı.
 4. **Ülke seçmeli üretim** — veride 186 ülke var; her ülke için ayrı CSV + sitede seçici.
+   **Bilinçli olarak ertelendi (2026-09-07).** Kullanıcının koyduğu sınır: indirme sayfasının
+   sade ve işlevsel tasarımı zarar görmemeli. 186 satırlık bir liste ya da ağır bir seçici
+   arayüz bu şartı çiğner; iş yeniden ele alınırken önce tasarımın nasıl korunacağı
+   çözülmeli, üretim tarafı ondan sonra gelir.
 5. **Talkgroup listesi** (Brandmeister) — D890UV "Talk Groups" CSV'si, deponun eksik ikinci yarısı.
-
-## Ortam notları
-
-- `pytest` ve `unidecode` bu makinede kurulu.
-- Depoda git kimliği yerel ayarlı (bkz. CLAUDE.md); global `.gitconfig` yok, olmamalı.
-- Bash aracıyla heredoc'a Türkçe metin yazdırma kesme işareti yüzünden bozuluyor
-  (`ID'sinin` gibi) — dosya yazarken Write aracını kullan.
