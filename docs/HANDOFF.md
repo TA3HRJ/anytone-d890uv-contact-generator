@@ -2,6 +2,15 @@
 
 Son güncelleme: 2026-09-08
 
+## Durum
+
+Üretim çalışıyor ve sağlıklı. Her gün 06:00 UTC'de radioid.net'ten altı CSV üretilip
+GitHub Pages'e yayınlanıyor; iş başarısız olursa `uretim-hatasi` etiketiyle issue açılıyor.
+Bozuk indirme mevcut çıktının üzerine yazamıyor. 89 test `generator.py`'den önce koşuyor.
+
+Açık listede **yapılmayı bekleyen iş yok** — kalan iki madde de bilinçli kararla beklemede
+(aşağıda gerekçeleriyle). Yeni bir yön belirlenmeden buradan devam edilecek bir şey yok.
+
 ## Nerede kalındı
 
 Yedi iş bitti ve gerçek veriyle doğrulandı:
@@ -73,6 +82,9 @@ Yayında doğrulandı: damga `2026-09-07 20:12 UTC`, istek `stats.json?v=2026090
 **Kalan davranış (hata değil):** HTML'in kendisi hâlâ 10 dakikaya kadar önbellekte kalabiliyor,
 yani geri dönen ziyaretçi bir süre önceki sayfayı görebilir. Fark şu ki artık o sayfadaki tarih ve
 sayılar birbiriyle tutarlı.
+
+**Bu çözüm 7. işte geçersiz kaldı** — sürüm anahtarı ve iki `sed` tamamen kaldırıldı, tarih
+`stats.json`'a taşındı. Burası tarihi kayıt olarak duruyor; kodda `{{VERSION}}` aramayın.
 
 ### 5. CI bakımı ve görüntü düzeltmeleri
 
