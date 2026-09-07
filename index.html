@@ -91,19 +91,28 @@
         </div>
 
         <p class="footer">
-            Last generated: <span class="badge">{{GENERATED_DATE}}</span><br>
+            Last generated: <span class="badge" id="generated_at">—</span><br>
             <a href="https://github.com/TA3HRJ/anytone-d890uv-contact-generator">Source code on GitHub</a>
             &middot; TA3HRJ
         </p>
     </div>
     <script>
-        // Sürüm anahtarı build sırasında damgalanıyor. Sayfa ve stats.json ayrı
-        // önbelleklendiği için bu olmadan taze bir tarih eski sayılarla eşleşebiliyordu.
-        fetch("stats.json?v={{VERSION}}")
+        // Tarih de sayılar da aynı dosyadan geliyor, bu yüzden ayrışamazlar.
+        // Anahtarlar tek tek okunuyor: stats.json'a yeni bir alan eklendiğinde
+        // karşılığı olmayan bir id aranıp sayfa boş kalmasın.
+        const COUNT_KEYS = ["dmr_turkey", "dmr_europe", "dmr_world",
+                            "nxdn_turkey", "nxdn_europe", "nxdn_world"];
+
+        fetch("stats.json", { cache: "no-cache" })
             .then(r => r.json())
             .then(s => {
-                for (const [k, v] of Object.entries(s))
-                    document.getElementById(k).textContent = v.toLocaleString();
+                for (const key of COUNT_KEYS) {
+                    const cell = document.getElementById(key);
+                    if (cell && typeof s[key] === "number")
+                        cell.textContent = s[key].toLocaleString();
+                }
+                const stamp = document.getElementById("generated_at");
+                if (stamp && s.generated_at) stamp.textContent = s.generated_at;
             });
     </script>
 </body>

@@ -7,6 +7,7 @@ import json
 import sys
 import urllib.error
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 
 from unidecode import unidecode
@@ -392,10 +393,12 @@ def main() -> None:
     write_nxdn_csv(nxdn_europe, OUTPUT_DIR / "NX Digital Contact List - Europe.csv")
     write_nxdn_csv(nxdn_records, OUTPUT_DIR / "NX Digital Contact List - World.csv")
 
-    # index.html stats.json'daki her anahtarı bir tablo hücresine yazıyor;
-    # yeni anahtar eklemeden önce orayı da güncelle.
+    # Üretim tarihi de sayılarla aynı dosyada duruyor; sayfa ikisini tek istekte
+    # aldığı için taze tarihin eski sayılarla eşleşmesi artık mümkün değil.
+    payload = dict(stats, generated_at=datetime.now(timezone.utc)
+                   .strftime("%Y-%m-%d %H:%M UTC"))
     with open(OUTPUT_DIR / "stats.json", "w") as f:
-        json.dump(stats, f)
+        json.dump(payload, f)
 
     print("\nDone!")
 

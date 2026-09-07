@@ -290,6 +290,36 @@ def test_baseline_with_unexpected_keys_is_ignored():
     assert g.check_sanity(GOOD, baseline) == []
 
 
+# --- index.html ile stats.json sözleşmesi -------------------------------------
+
+INDEX_HTML = Path(__file__).resolve().parent.parent / "index.html"
+STAT_KEYS = ["dmr_turkey", "dmr_europe", "dmr_world",
+             "nxdn_turkey", "nxdn_europe", "nxdn_world"]
+
+
+def test_page_has_a_cell_for_every_count():
+    # Sayı yazılacak yeri olmayan bir anahtar sayfada sessizce kaybolur
+    html = INDEX_HTML.read_text(encoding="utf-8")
+    for key in STAT_KEYS:
+        assert f'id="{key}"' in html, f"{key} icin hucre yok"
+
+
+def test_page_has_a_slot_for_the_timestamp():
+    assert 'id="generated_at"' in INDEX_HTML.read_text(encoding="utf-8")
+
+
+def test_page_has_no_build_time_placeholders():
+    # Tarih artık stats.json'dan geliyor; build'de sed ile doldurulan yer kalmamalı
+    html = INDEX_HTML.read_text(encoding="utf-8")
+    assert "{{" not in html, "sayfada doldurulmamis yer tutucu kalmis"
+
+
+def test_workflow_does_not_patch_the_page():
+    workflow = (Path(__file__).resolve().parent.parent
+                / ".github" / "workflows" / "generate.yml").read_text(encoding="utf-8")
+    assert "sed -i" not in workflow
+
+
 # --- Girdi doğrulama ----------------------------------------------------------
 
 def test_require_csv_accepts_real_header():
