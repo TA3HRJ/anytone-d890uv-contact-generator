@@ -4,7 +4,7 @@ Son güncelleme: 2026-09-07
 
 ## Nerede kalındı
 
-Üç iş bitti ve gerçek veriyle doğrulandı:
+Beş iş bitti ve gerçek veriyle doğrulandı:
 
 ### 1. Avrupa/Türkiye filtresi artık MCC'ye bakıyor
 
@@ -51,7 +51,7 @@ hata verdi ve `output/` altındaki dosyaların md5'leri değişmedi.
 
 ### 3. Testler
 
-`tests/test_generator.py`, 62 test. Kapsanan üç kırılgan nokta: 16 karakter sınırı,
+`tests/test_generator.py`, 85 test. Kapsanan üç kırılgan nokta: 16 karakter sınırı,
 CPS sütun düzeni (başlıklar + QUOTE_ALL + CRLF), sayı kontrolü. Ayrıca ülke yazım
 varyantları, MCC ön ekleri, yinelenen/geçersiz satır atma, harf çevirisi.
 
@@ -74,6 +74,25 @@ Yayında doğrulandı: damga `2026-09-07 20:12 UTC`, istek `stats.json?v=2026090
 yani geri dönen ziyaretçi bir süre önceki sayfayı görebilir. Fark şu ki artık o sayfadaki tarih ve
 sayılar birbiriyle tutarlı.
 
+### 5. CI bakımı ve görüntü düzeltmeleri
+
+- Dört action güncel majör sürüme çekildi (checkout v7, setup-python v7,
+  upload-pages-artifact v5, deploy-pages v5). Eski sürümler Node 20 hedefliyordu;
+  runner şimdilik Node 24'e zorluyor ama destek kalkınca üretim dururdu.
+- Workflow'a `concurrency: group: pages, cancel-in-progress: false` eklendi.
+- İsmi boş 39 kayıtta `Name` alanına çağrı işareti konuyor.
+- `normalize_case()` — CAPS LOCK / tamamen küçük harf düzeltmesi. **Neden sadece
+  tek biçim kutulanmış parçalara uygulanıyor:** körlemesine `.title()` kaynakta
+  zaten doğru yazılmış 25 ismi (McDonald, MacKenzie, LaSalle) ve isim alanına
+  yazılmış 2.925 çağrı işaretini (K2BSA -> K2bsa) bozuyordu. Rakam içeren parça
+  ve karışık kutulu parça atlanıyor; baş harfler `title()` sayesinde
+  kendiliğinden korunuyor, ayrı kural gerekmiyor (ilk denemede 1-2 harf koruması
+  konmuştu, "PALMA DE MALLORCA" -> "Palma DE Mallorca" verdiği için kaldırıldı).
+  **Ülke alanı kasıtlı olarak dışarıda** — bölge filtresi o değere bakıyor.
+  Ekran görüntüsüyle doğrulandı: `ESMERALDO/FORTALEZA` -> `Esmeraldo/Fortaleza`,
+  `carlos/ribeirao pires` -> `Carlos/Ribeirao Pires`, `McKinney` ve `LaSalle`
+  bozulmadan duruyor.
+
 ## Ölçülen sonuç (2026-09-07 verisi)
 
 | Liste | Kayıt |
@@ -89,8 +108,7 @@ sayılar birbiriyle tutarlı.
 
 Öncelik sırasıyla, hiçbiri başlanmadı:
 
-1. **Workflow'a `concurrency: group: pages`** — elle tetikleme zamanlanmışla çakışabiliyor.
-   Başarısızlıkta bildirim de yok, liste sessizce eskir.
+1. **Workflow başarısız olunca bildirim yok** — liste sessizce eskir.
 2. **Büyük dosyaları gzip/zip sunmak** — DMR Dünya 31 MB.
 3. **`stats.json`'a üretim tarihi koyup build'deki iki `sed`'i (`{{GENERATED_DATE}}`,
    `{{VERSION}}`) kaldırmak.** DİKKAT: `index.html` `stats.json`'daki *her* anahtarı
@@ -100,8 +118,6 @@ sayılar birbiriyle tutarlı.
    önbellek ayrışmasını geri getirir — yerine `cache: "no-cache"` gibi bir şey konmalı.
 4. **Ülke seçmeli üretim** — veride 186 ülke var; her ülke için ayrı CSV + sitede seçici.
 5. **Talkgroup listesi** (Brandmeister) — D890UV "Talk Groups" CSV'si, deponun eksik ikinci yarısı.
-6. **İsmi boş kayıtlar** — dünya listesinde ~39 tane; ekranda boş görünüyor, callsign'a düşmek
-   mantıklı ama henüz yapılmadı.
 
 ## Ortam notları
 
