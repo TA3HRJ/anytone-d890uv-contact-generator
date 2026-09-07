@@ -64,3 +64,54 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+  # Zamanlanmış çalıştırma sessizce başarısız olursa yayındaki listeler eskir ve
+  # kimsenin haberi olmaz. Issues sekmesi mobilde de görünüyor, Deployments'ın aksine.
+  notify-failure:
+    needs: [generate, deploy]
+    if: failure()
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Report the failed run as an issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TITLE: Otomatik kişi listesi üretimi başarısız
+          LABEL: uretim-hatasi
+          BODY: |
+            Günlük üretim başarısız oldu; indirme sayfasındaki listeler bugünden
+            itibaren eskiyor.
+
+            Başarısız çalıştırma: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Sık görülen sebepler: radioid.net dökümüne ulaşılamaması, kayıt
+            sayılarının bir önceki çalıştırmanın %80'inin altına düşmesi
+            (generator.py bu durumda mevcut çıktının üzerine yazmayı reddediyor),
+            ya da testlerin kalması.
+
+            Sorun giderilip iş yeniden başarıyla koştuğunda bu issue elle kapatılmalı.
+        run: |
+          set -euo pipefail
+
+          # Etiket yoksa oluştur; gh issue create var olmayan etiketle hata veriyor.
+          gh label create "$LABEL" --repo "$REPO" --color B60205 \
+            --description "Zamanlanmış üretim başarısız oldu" 2>/dev/null || true
+
+          # Aynı arıza günlerce sürerse her sabah yeni issue açılmasın: açık bir
+          # bildirim varsa ona yorum düşülüyor. Etiketle eşleştirmek başlık
+          # aramasından sağlam - arama indeksinin gecikmesine bağlı değil.
+          existing=$(gh issue list --repo "$REPO" --state open --label "$LABEL" \
+            --json number --jq '.[0].number // empty')
+
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --repo "$REPO" \
+              --body "Yeniden başarısız oldu: $RUN_URL"
+            echo "Commented on existing issue #$existing"
+          else
+            gh issue create --repo "$REPO" --title "$TITLE" \
+              --label "$LABEL" --body "$BODY"
+            echo "Opened a new issue"
+          fi
