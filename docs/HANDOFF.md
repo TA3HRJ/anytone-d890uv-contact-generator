@@ -58,6 +58,22 @@ varyantları, MCC ön ekleri, yinelenen/geçersiz satır atma, harf çevirisi.
 `requirements-dev.txt` eklendi. Workflow artık `generator.py`'den **önce** `pytest`
 çalıştırıyor ve `timeout-minutes: 20` taşıyor.
 
+### 4. İndirme sayfasındaki sayılar tarih damgasıyla aynı sürüme bağlandı
+
+**Sorun neydi:** sayfa ve `stats.json` GitHub Pages tarafından bağımsız önbellekleniyor — ikisi de
+`max-age=600` ama `Age`'leri ayrı ilerliyor (ölçüldü: sayfa `Age: 0` iken `stats.json` `Age: 20`).
+Tarih damgası HTML'e build'de gömülü, sayılar ayrı bir `fetch` ile geliyordu; sayfa tazelenip yeni
+"Last generated" tarihini gösterirken sayılar on dakikaya kadar bir önceki çalıştırmanınki
+kalabiliyordu.
+
+**Ne yapıldı:** `fetch("stats.json?v={{VERSION}}")`, `{{VERSION}}` build adımında
+`date -u +%Y%m%d%H%M` ile damgalanıyor. HTML ve sayılar artık hep aynı sürümden geliyor.
+Yayında doğrulandı: damga `2026-09-07 20:12 UTC`, istek `stats.json?v=202609072012`.
+
+**Kalan davranış (hata değil):** HTML'in kendisi hâlâ 10 dakikaya kadar önbellekte kalabiliyor,
+yani geri dönen ziyaretçi bir süre önceki sayfayı görebilir. Fark şu ki artık o sayfadaki tarih ve
+sayılar birbiriyle tutarlı.
+
 ## Ölçülen sonuç (2026-09-07 verisi)
 
 | Liste | Kayıt |
@@ -76,10 +92,12 @@ varyantları, MCC ön ekleri, yinelenen/geçersiz satır atma, harf çevirisi.
 1. **Workflow'a `concurrency: group: pages`** — elle tetikleme zamanlanmışla çakışabiliyor.
    Başarısızlıkta bildirim de yok, liste sessizce eskir.
 2. **Büyük dosyaları gzip/zip sunmak** — DMR Dünya 31 MB.
-3. **`stats.json`'a üretim tarihi koyup `index.html`'deki `sed {{GENERATED_DATE}}` hack'ini
-   kaldırmak.** DİKKAT: `index.html` `stats.json`'daki *her* anahtarı `getElementById(k)` ile
-   arıyor; karşılığı olmayan bir anahtar eklenirse script `null.textContent` ile patlar ve
-   tablodaki bütün sayılar `-` kalır. Anahtar eklerken `index.html` aynı commit'te güncellenmeli.
+3. **`stats.json`'a üretim tarihi koyup build'deki iki `sed`'i (`{{GENERATED_DATE}}`,
+   `{{VERSION}}`) kaldırmak.** DİKKAT: `index.html` `stats.json`'daki *her* anahtarı
+   `getElementById(k)` ile arıyor; karşılığı olmayan bir anahtar eklenirse script
+   `null.textContent` ile patlar ve tablodaki bütün sayılar `-` kalır. Anahtar eklerken
+   `index.html` aynı commit'te güncellenmeli. Ayrıca sürüm anahtarını kaldırmak 4. maddedeki
+   önbellek ayrışmasını geri getirir — yerine `cache: "no-cache"` gibi bir şey konmalı.
 4. **Ülke seçmeli üretim** — veride 186 ülke var; her ülke için ayrı CSV + sitede seçici.
 5. **Talkgroup listesi** (Brandmeister) — D890UV "Talk Groups" CSV'si, deponun eksik ikinci yarısı.
 6. **İsmi boş kayıtlar** — dünya listesinde ~39 tane; ekranda boş görünüyor, callsign'a düşmek
