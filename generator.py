@@ -5,6 +5,7 @@ import csv
 import io
 import json
 import sys
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -13,20 +14,38 @@ from unidecode import unidecode
 DMR_URL = "https://radioid.net/static/user.csv"
 NXDN_URL = "https://radioid.net/static/nxdn.csv"
 
+# Bir önceki başarılı çalışmanın sayıları; kaynak bozulduğunda karşılaştırma tabanı.
+BASELINE_STATS_URL = "https://ta3hrj.github.io/anytone-d890uv-contact-generator/stats.json"
+
+DOWNLOAD_TIMEOUT = 120
+BASELINE_TIMEOUT = 30
+
+# Listeler bir gecede bu oranın altına düşmez; düşüyorsa kaynak bozulmuştur.
+MIN_RATIO = 0.80
+
+# Taban yoksa (ilk çalışma, Pages erişilemiyor) mutlak alt sınır.
+ABSOLUTE_FLOORS = {"dmr_world": 200_000, "nxdn_world": 10_000}
+
 NAME_MAX_LEN = 16
 OUTPUT_DIR = Path(__file__).parent / "output"
 
+# radioid.net'te aynı ülke birden çok yazımla geçiyor; hepsi burada olmak zorunda.
+# Karşılaştırma normalize edilerek yapılır (bkz. normalize_country).
 EUROPE_COUNTRIES = {
     "Albania", "Andorra", "Armenia", "Austria", "Azerbaijan", "Belarus", "Belgium",
-    "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic",
-    "Czechia", "Denmark", "Estonia", "Finland", "France", "Georgia", "Germany",
-    "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kazakhstan", "Kosovo",
-    "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova",
-    "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland",
-    "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia",
-    "Spain", "Sweden", "Switzerland", "Turkiye", "Turkey", "Ukraine",
+    "Bosnia and Herzegovina", "Bosnia and Hercegovina", "Bulgaria", "Corsica",
+    "Croatia", "Cyprus", "Czech Republic", "Czechia", "Denmark", "Estonia",
+    "Faroe Islands", "Finland", "France", "Georgia", "Germany", "Gibraltar",
+    "Greece", "Greenland", "Hungary", "Iceland", "Ireland", "Isle of Man", "Italy",
+    "Kazakhstan", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg",
+    "Luxemburg", "Macedonia", "Malta", "Moldova", "Monaco", "Montenegro",
+    "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania",
+    "Russia", "Aland Islands", "Aaland Islands", "San Marino", "Serbia", "Slovakia",
+    "Slovenia", "Spain", "Sweden", "Switzerland", "Turkiye", "Turkey", "Ukraine",
     "United Kingdom", "Vatican City",
 }
+
+TURKEY_COUNTRIES = {"Turkey", "Turkiye"}
 
 DMR_HEADER = ["No.", "Radio ID", "Callsign", "Name", "City", "State", "Country",
               "Remarks", "Call Type", "Call Alert"]
@@ -34,13 +53,57 @@ NXDN_HEADER = ["RADIO_ID", "CALLSIGN", "FIRST_NAME", "LAST_NAME", "CITY", "STATE
                "COUNTRY", "Attr", "TxForbid", "Ring"]
 
 
-def download(url: str, label: str) -> str:
+def normalize_country(value: str) -> str:
+    return " ".join(unidecode(value).lower().replace(".", " ").split())
+
+
+EUROPE_NORMALIZED = {normalize_country(c) for c in EUROPE_COUNTRIES}
+TURKEY_NORMALIZED = {normalize_country(c) for c in TURKEY_COUNTRIES}
+
+
+def is_european_country(country: str) -> bool:
+    return normalize_country(country) in EUROPE_NORMALIZED
+
+
+def is_turkish_country(country: str) -> bool:
+    return normalize_country(country) in TURKEY_NORMALIZED
+
+
+def is_european_id(radio_id: str) -> bool:
+    """DMR ID'sinin ilk üç hanesi MCC ülke kodudur; 2xx bloğu tamamen Avrupa'ya ayrılmış.
+
+    Ülke adına bakmaktan sağlam: radioid.net yazımı değiştirince kırılmıyor.
+    """
+    return len(radio_id) == 7 and radio_id.startswith("2")
+
+
+def is_turkish_id(radio_id: str) -> bool:
+    """MCC 286 = Türkiye."""
+    return len(radio_id) == 7 and radio_id.startswith("286")
+
+
+def download(url: str, label: str, timeout: int = DOWNLOAD_TIMEOUT) -> str:
     print(f"Downloading {label}...", end=" ", flush=True)
     req = urllib.request.Request(url, headers={"User-Agent": "AnytoneContactGen/1.0"})
-    with urllib.request.urlopen(req) as resp:
-        data = resp.read().decode("utf-8", errors="replace")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = resp.read().decode("utf-8", errors="replace")
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        print("FAILED.")
+        sys.exit(f"ERROR: {label} could not be downloaded: {exc}")
     print("done.")
     return data
+
+
+def require_csv(raw: str, label: str, required_columns: list[str]) -> str:
+    """radioid.net 200 ile HTML hata sayfası döndürebiliyor; öyleyse burada dur."""
+    header = raw.split("\n", 1)[0] if raw else ""
+    missing = [c for c in required_columns if c not in header]
+    if missing:
+        preview = header[:120].replace("\r", "")
+        sys.exit(f"ERROR: {label} is not the expected CSV "
+                 f"(missing columns: {', '.join(missing)}; got: {preview!r})")
+    return raw
 
 
 def truncate_name(name: str) -> str:
@@ -153,6 +216,64 @@ def parse_nxdn(raw: str) -> list[dict]:
     return records
 
 
+def find_country_gaps(dmr_records: list[dict]) -> dict[str, int]:
+    """MCC'ye göre Avrupa ama adı listede olmayan ülkeler.
+
+    Bunlar EUROPE_COUNTRIES'e eklenmesi gereken yazımlar. NXDN'de MCC yok,
+    orada tek ölçüt ad; bu rapor oradaki sessiz kaybı da haber verir.
+    """
+    gaps: dict[str, int] = {}
+    for r in dmr_records:
+        if is_european_id(r["radio_id"]) and not is_european_country(r["country"]):
+            gaps[r["country"]] = gaps.get(r["country"], 0) + 1
+    return gaps
+
+
+def report_country_gaps(dmr_records: list[dict]) -> None:
+    gaps = find_country_gaps(dmr_records)
+    if not gaps:
+        return
+    print("  WARNING: MCC says Europe but the country name is unknown "
+          "(add these spellings to EUROPE_COUNTRIES):")
+    for name, count in sorted(gaps.items(), key=lambda kv: -kv[1])[:10]:
+        print(f"    {name or '(empty)'}: {count:,}")
+
+
+def load_baseline() -> dict | None:
+    """Karşılaştırma tabanı: önce yerel stats.json, yoksa yayındaki Pages kopyası."""
+    local = OUTPUT_DIR / "stats.json"
+    if local.exists():
+        try:
+            return json.loads(local.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            pass
+    try:
+        req = urllib.request.Request(BASELINE_STATS_URL,
+                                     headers={"User-Agent": "AnytoneContactGen/1.0"})
+        with urllib.request.urlopen(req, timeout=BASELINE_TIMEOUT) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except Exception as exc:  # taban isteğe bağlı; yoksa mutlak sınırlarla devam
+        print(f"  Note: baseline stats unavailable ({exc}); using absolute floors only")
+        return None
+
+
+def check_sanity(stats: dict, baseline: dict | None) -> list[str]:
+    problems = []
+    for key, floor in ABSOLUTE_FLOORS.items():
+        if stats.get(key, 0) < floor:
+            problems.append(f"{key}={stats.get(key, 0):,} is below the absolute "
+                            f"floor {floor:,}")
+    if baseline:
+        for key, previous in baseline.items():
+            if key not in stats or not isinstance(previous, int) or previous <= 0:
+                continue
+            minimum = int(previous * MIN_RATIO)
+            if stats[key] < minimum:
+                problems.append(f"{key}={stats[key]:,} dropped below {MIN_RATIO:.0%} "
+                                f"of the previous run ({previous:,}, minimum {minimum:,})")
+    return problems
+
+
 def write_dmr_csv(records: list[dict], path: Path) -> None:
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f, quoting=csv.QUOTE_ALL)
@@ -182,28 +303,27 @@ def write_nxdn_csv(records: list[dict], path: Path) -> None:
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    dmr_raw = download(DMR_URL, "user.csv (DMR)")
-    nxdn_raw = download(NXDN_URL, "nxdn.csv (NXDN)")
+    dmr_raw = require_csv(download(DMR_URL, "user.csv (DMR)"), "user.csv (DMR)",
+                          ["RADIO_ID", "CALLSIGN", "COUNTRY"])
+    nxdn_raw = require_csv(download(NXDN_URL, "nxdn.csv (NXDN)"), "nxdn.csv (NXDN)",
+                           ["RADIO_ID", "CALLSIGN", "COUNTRY"])
 
     print("\nProcessing DMR...")
     dmr_records = parse_dmr(dmr_raw)
+    report_country_gaps(dmr_records)
 
     print("\nProcessing NXDN...")
     nxdn_records = parse_nxdn(nxdn_raw)
 
-    turkey_names = {"Turkey", "Turkiye"}
-    dmr_turkey = [r for r in dmr_records if r["country"] in turkey_names]
-    dmr_europe = [r for r in dmr_records if r["country"] in EUROPE_COUNTRIES]
-    nxdn_turkey = [r for r in nxdn_records if r["country"] in turkey_names]
-    nxdn_europe = [r for r in nxdn_records if r["country"] in EUROPE_COUNTRIES]
-
-    print("\nWriting CSV files...")
-    write_dmr_csv(dmr_turkey, OUTPUT_DIR / "DMR Digital Contact List - Turkey.csv")
-    write_dmr_csv(dmr_europe, OUTPUT_DIR / "DMR Digital Contact List - Europe.csv")
-    write_dmr_csv(dmr_records, OUTPUT_DIR / "DMR Digital Contact List - World.csv")
-    write_nxdn_csv(nxdn_turkey, OUTPUT_DIR / "NX Digital Contact List - Turkey.csv")
-    write_nxdn_csv(nxdn_europe, OUTPUT_DIR / "NX Digital Contact List - Europe.csv")
-    write_nxdn_csv(nxdn_records, OUTPUT_DIR / "NX Digital Contact List - World.csv")
+    # DMR'de birincil ölçüt MCC; ad eşleşmesi yalnızca MCC 2xx dışında kalan
+    # Avrupa ülkeleri (Azerbaycan 400, Kazakistan 401) için yedek.
+    dmr_turkey = [r for r in dmr_records
+                  if is_turkish_id(r["radio_id"]) or is_turkish_country(r["country"])]
+    dmr_europe = [r for r in dmr_records
+                  if is_european_id(r["radio_id"]) or is_european_country(r["country"])]
+    # NXDN ID'leri MCC taşımıyor (1-5 hane), burada tek ölçüt ülke adı.
+    nxdn_turkey = [r for r in nxdn_records if is_turkish_country(r["country"])]
+    nxdn_europe = [r for r in nxdn_records if is_european_country(r["country"])]
 
     stats = {
         "dmr_turkey": len(dmr_turkey),
@@ -213,6 +333,26 @@ def main() -> None:
         "nxdn_europe": len(nxdn_europe),
         "nxdn_world": len(nxdn_records),
     }
+
+    # Kontrol yazmadan önce: bozuk indirme sağlam dosyaların üzerine yazmasın.
+    print("\nChecking record counts...")
+    problems = check_sanity(stats, load_baseline())
+    if problems:
+        for p in problems:
+            print(f"  FAIL: {p}")
+        sys.exit("ERROR: record counts look wrong; refusing to overwrite existing output.")
+    print("  OK")
+
+    print("\nWriting CSV files...")
+    write_dmr_csv(dmr_turkey, OUTPUT_DIR / "DMR Digital Contact List - Turkey.csv")
+    write_dmr_csv(dmr_europe, OUTPUT_DIR / "DMR Digital Contact List - Europe.csv")
+    write_dmr_csv(dmr_records, OUTPUT_DIR / "DMR Digital Contact List - World.csv")
+    write_nxdn_csv(nxdn_turkey, OUTPUT_DIR / "NX Digital Contact List - Turkey.csv")
+    write_nxdn_csv(nxdn_europe, OUTPUT_DIR / "NX Digital Contact List - Europe.csv")
+    write_nxdn_csv(nxdn_records, OUTPUT_DIR / "NX Digital Contact List - World.csv")
+
+    # index.html stats.json'daki her anahtarı bir tablo hücresine yazıyor;
+    # yeni anahtar eklemeden önce orayı da güncelle.
     with open(OUTPUT_DIR / "stats.json", "w") as f:
         json.dump(stats, f)
 

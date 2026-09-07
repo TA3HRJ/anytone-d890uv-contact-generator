@@ -13,6 +13,7 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    timeout-minutes: 20   # asılı kalan indirme runner'ı saatlerce meşgul etmesin
     steps:
       - uses: actions/checkout@v4
 
@@ -21,8 +22,13 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt -r requirements-dev.txt
 
+      - name: Run tests
+        run: python -m pytest tests -q
+
+      # Kayıt sayıları bir önceki çalışmanın %80'inin altına düşerse
+      # generator.py burada hata verir ve deploy adımı hiç çalışmaz.
       - name: Generate contact lists
         run: python generator.py
 
