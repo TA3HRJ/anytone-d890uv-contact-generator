@@ -1,10 +1,10 @@
 # HANDOFF
 
-Son güncelleme: 2026-09-07
+Son güncelleme: 2026-09-08
 
 ## Nerede kalındı
 
-Beş iş bitti ve gerçek veriyle doğrulandı:
+Altı iş bitti ve gerçek veriyle doğrulandı:
 
 ### 1. Avrupa/Türkiye filtresi artık MCC'ye bakıyor
 
@@ -93,6 +93,22 @@ sayılar birbiriyle tutarlı.
   `carlos/ribeirao pires` -> `Carlos/Ribeirao Pires`, `McKinney` ve `LaSalle`
   bozulmadan duruyor.
 
+### 6. Üretim başarısız olunca issue açılıyor
+
+Zamanlanmış çalıştırma sessizce başarısız olduğunda hiçbir uyarı çıkmıyordu.
+Actions ve Deployments sekmeleri mobilde görünmediği için uyarının Issues sekmesinde
+durması gerekiyordu.
+
+`notify-failure` işi (`if: failure()`, `permissions: issues: write`) başarısız
+çalıştırmayı `uretim-hatasi` etiketiyle bir issue olarak açıyor. Aynı arıza günlerce
+sürerse yeni issue açmıyor, açık olana yorum düşüyor — bunun için etiketle
+eşleştiriliyor, başlık aramasıyla değil (arama indeksi gecikebiliyor).
+
+**Gerçekten test edildi.** Geçici bir dalda kasten hata veren bir adımla iki kez
+çalıştırıldı: ilkinde issue açıldı, ikincisinde yeni issue açılmayıp yoruma düşüldü.
+Üretim etkilenmedi (`deploy` işi hiç koşmadı). Test dalı ve issue temizlendi;
+Actions geçmişinde iki başarısız çalıştırma kaydı bu yüzden duruyor.
+
 ## Ölçülen sonuç (2026-09-07 verisi)
 
 | Liste | Kayıt |
@@ -108,17 +124,16 @@ sayılar birbiriyle tutarlı.
 
 Öncelik sırasıyla, hiçbiri başlanmadı:
 
-1. **Workflow başarısız olunca bildirim yok** — liste sessizce eskir.
-2. **Büyük dosyaları gzip/zip sunmak** — DMR Dünya 31 MB.
-3. **`stats.json`'a üretim tarihi koyup build'deki iki `sed`'i (`{{GENERATED_DATE}}`,
+1. **Büyük dosyaları gzip/zip sunmak** — DMR Dünya 31 MB.
+2. **`stats.json`'a üretim tarihi koyup build'deki iki `sed`'i (`{{GENERATED_DATE}}`,
    `{{VERSION}}`) kaldırmak.** DİKKAT: `index.html` `stats.json`'daki *her* anahtarı
    `getElementById(k)` ile arıyor; karşılığı olmayan bir anahtar eklenirse script
    `null.textContent` ile patlar ve tablodaki bütün sayılar `-` kalır. Anahtar eklerken
-   `index.html` aynı commit'te güncellenmeli. Ayrıca sürüm anahtarını kaldırmak 4. maddedeki
-   önbellek ayrışmasını geri getirir — yerine `cache: "no-cache"` gibi bir şey konmalı.
-4. **Ülke seçmeli üretim** — veride 186 ülke var; her ülke için ayrı CSV + sitede seçici.
+   `index.html` aynı commit'te güncellenmeli. Ayrıca sürüm anahtarını kaldırmak
+   yukarıdaki 4. işte anlatılan önbellek ayrışmasını geri getirir — yerine `cache: "no-cache"` gibi bir şey konmalı.
+3. **Ülke seçmeli üretim** — veride 186 ülke var; her ülke için ayrı CSV + sitede seçici.
    **Bilinçli olarak ertelendi (2026-09-07).** Kullanıcının koyduğu sınır: indirme sayfasının
    sade ve işlevsel tasarımı zarar görmemeli. 186 satırlık bir liste ya da ağır bir seçici
    arayüz bu şartı çiğner; iş yeniden ele alınırken önce tasarımın nasıl korunacağı
    çözülmeli, üretim tarafı ondan sonra gelir.
-5. **Talkgroup listesi** (Brandmeister) — D890UV "Talk Groups" CSV'si, deponun eksik ikinci yarısı.
+4. **Talkgroup listesi** (Brandmeister) — D890UV "Talk Groups" CSV'si, deponun eksik ikinci yarısı.
