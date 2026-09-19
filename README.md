@@ -101,4 +101,4 @@ MIT License — see [LICENSE](LICENSE) file.
 
 ## Credits
 
-Developed by TA3HRJ
+Developed by TA3HX (formerly TA3HRJ)
