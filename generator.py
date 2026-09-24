@@ -88,7 +88,9 @@ def download(url: str, label: str, timeout: int = DOWNLOAD_TIMEOUT) -> str:
     req = urllib.request.Request(url, headers={"User-Agent": "AnytoneContactGen/1.0"})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            data = resp.read().decode("utf-8", errors="replace")
+            # utf-8-sig: dosya BOM ile gelirse ilk sütun "﻿RADIO_ID" olur,
+            # require_csv yine geçer ama her satır geçersiz sayılıp 0 kayıt çıkar.
+            data = resp.read().decode("utf-8-sig", errors="replace")
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
         print("FAILED.")
         sys.exit(f"ERROR: {label} could not be downloaded: {exc}")
@@ -123,9 +125,15 @@ def normalize_case(value: str) -> str:
     radioid.net kayıtlarının bir kısmı "ESMERALDO", bir kısmı "adriano" biçiminde;
     telsiz listesinde bunlar yan yana durunca dağınık görünüyor.
 
-    Dokunulmayanlar, ikisi de gerçek veride ölçüldü:
-    - Karışık kutulu parçalar (McDonald, MacKenzie, LaSalle) — zaten doğru yazılmış,
-      düzleştirmek bozardı.
+    Karar parça bazında değil **alan bazında** veriliyor: alanın tamamı tek biçimde
+    kutulanmışsa düzeltiliyor, değilse alan olduğu gibi kalıyor. Parça bazında karar
+    doğru yazılmış alanların içindeki küçük harfli ekleri ve kısaltmaları bozuyordu:
+    "Frankfurt am Main" -> "Frankfurt Am Main", "Jan van der Berg" -> "Jan Van Der
+    Berg", "Washington DC" -> "Washington Dc".
+
+    Dokunulmayanlar:
+    - Karışık kutulu alanlar (McDonald, MacKenzie, "Frankfurt am Main") — zaten doğru
+      yazılmış, düzleştirmek bozardı.
     - Rakam içeren parçalar — isim alanına yazılmış çağrı işaretleri (K2BSA, SV8JNL).
 
     Baş harfler ayrı bir kural istemiyor: title() tek harfi olduğu gibi bırakıyor,
@@ -134,33 +142,30 @@ def normalize_case(value: str) -> str:
     Tamamı büyük yazılmış bir ad zaten kendi iç kutulamasını kaybetmiş durumda;
     "MCDONALD" buradan "Mcdonald" çıkar, "McDonald" değil. Bilgi kaynakta yok.
     """
-    parts = []
-    for token in value.split():
-        letters = [c for c in token if c.isalpha()]
-        uniform = (all(c.isupper() for c in letters)
-                   or all(c.islower() for c in letters))
-        if uniform and not any(c.isdigit() for c in token):
-            parts.append(token.title())
-        else:
-            parts.append(token)
-    return " ".join(parts)
+    letters = [c for c in value if c.isalpha()]
+    uniform = (all(c.isupper() for c in letters)
+               or all(c.islower() for c in letters))
+    if not uniform:
+        return " ".join(value.split())
+    return " ".join(token if any(c.isdigit() for c in token) else token.title()
+                    for token in value.split())
 
 
 def clean_name(first: str, last: str) -> str:
-    parts = []
-    if first.strip():
-        parts.append(first.strip())
-    if last.strip():
-        parts.append(last.strip())
-    combined = " ".join(parts)
-    combined = " ".join(combined.split())
-    combined = normalize_case(unidecode(combined))
-    return truncate_name(combined)
+    # Ad ve soyad ayrı kutulanıyor: "Jean" + "DUPONT" birleşince karışık kutulu
+    # tek alan olur ve normalize_case ona dokunmaz; ayrı ayrı bakınca soyad düzelir.
+    parts = [normalize_case(unidecode(p)) for p in (first, last) if p.strip()]
+    return truncate_name(" ".join(p for p in parts if p))
 
 
 def transliterate_field(value: str) -> str:
-    """Ülke adı için kullanılmaz — bölge filtresi ham değere bakıyor."""
-    return unidecode(value.strip()) if value.strip() else ""
+    """Ülke adı için kutulama yapılmaz — bölge filtresi ham değere bakıyor.
+
+    Boşluk yine de sadeleştiriliyor: unidecode CJK karakterlerin arkasına boşluk
+    bırakıyor ("张三" -> "Zhang San "), alan içindeki satır sonu da CSV'de çok
+    satırlı bir hücre üretirdi.
+    """
+    return " ".join(unidecode(value).split())
 
 
 def clean_place(value: str) -> str:

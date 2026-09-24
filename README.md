@@ -6,7 +6,7 @@ Generate screen-character-compliant DMR and NXDN contact list CSV files for AnyT
 
 **→ [ta3hrj.github.io/anytone-d890uv-contact-generator](https://ta3hrj.github.io/anytone-d890uv-contact-generator/)**
 
-Ready-to-import CSV files, regenerated automatically every day at 06:00 UTC. No need to run
+Ready-to-import CSV files, regenerated automatically once a day. No need to run
 anything yourself — just pick your region and import into the CPS.
 
 ## Features

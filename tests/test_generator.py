@@ -108,9 +108,34 @@ def test_initials_survive():
     assert g.normalize_case("j w smith") == "J W Smith"
 
 
+@pytest.mark.parametrize("already_correct", [
+    "Frankfurt am Main", "Jan van der Berg", "Ricardo de Souza",
+    "Washington DC", "Sao Paulo SP",
+])
+def test_lowercase_particles_and_abbreviations_in_correct_fields_survive(already_correct):
+    # Parça bazında karar "am" -> "Am", "DC" -> "Dc" yapıyordu; alan zaten doğru
+    assert g.normalize_case(already_correct) == already_correct
+
+
 def test_case_fix_applies_through_clean_name():
     assert g.clean_name("ESMERALDO", "FORTALEZA") == "Esmeraldo"
     assert g.clean_name("carlos", "") == "Carlos"
+
+
+def test_first_and_last_name_are_cased_separately():
+    # "Jean DUPONT" birleşik alan olarak karışık kutulu; soyad yine düzelmeli
+    assert g.clean_name("Jean", "DUPONT") == "Jean Dupont"
+    assert g.clean_name("Jan", "van der Berg") == "Jan van der Berg"
+
+
+def test_trailing_space_from_transliteration_is_dropped():
+    # unidecode CJK sonrası boşluk bırakıyor
+    assert g.transliterate_field("张三") == "Zhang San"
+    assert g.clean_name("张三", "") == "Zhang San"
+
+
+def test_newline_inside_field_does_not_reach_csv():
+    assert g.transliterate_field("United\nKingdom") == "United Kingdom"
 
 
 def test_case_fix_applies_to_places():
