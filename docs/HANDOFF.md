@@ -12,6 +12,17 @@ issue açılıyor. Bozuk indirme mevcut çıktının üzerine yazamıyor. 108 te
 Açık listede **yapılmayı bekleyen iş yok** — kalan iki madde de bilinçli kararla beklemede
 (aşağıda gerekçeleriyle). Yeni bir yön belirlenmeden buradan devam edilecek bir şey yok.
 
+**Takip (2026-09-25 ve sonrası):** 8. ve 9. işin commit'leri (`56958de`, `b3ce04a`)
+2026-09-24 yayınından *sonra* push'landı — o günün koşusu `a127781` ile yapıldı. Push
+workflow'u tetiklemiyor (yalnızca cron + `workflow_dispatch`), yani yeni kutulama kuralı ve
+`23 5` cron'u üretimde ilk kez 25 Eylül'de koşacak. Yerelde önceden doğrulandı: 108 test
+yeşil, `generator.py` canlı veride hatasız, sayılar yayındakiyle birebir, `Rewrote 12,538`.
+Bakılacaklar: 25 Eylül koşusu yeşil mi, `head_sha` `b3ce04a` mı; bir hafta boyunca
+`run_started_at` eski 10:20-12:20 bandından erkene çekildi mi.
+
+Bu makinede `gh` yok; durum GitHub REST API'sinden anonim okunuyor:
+`Invoke-RestMethod https://api.github.com/repos/TA3HRJ/anytone-d890uv-contact-generator/actions/runs?per_page=10`.
+
 ## Nerede kalındı
 
 Dokuz iş bitti, hepsi gerçek veriyle doğrulandı (8. iş 9. işte ölçüldü):
