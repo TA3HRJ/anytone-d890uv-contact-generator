@@ -1,19 +1,20 @@
 # HANDOFF
 
-Son güncelleme: 2026-09-08
+Son güncelleme: 2026-09-24
 
 ## Durum
 
-Üretim çalışıyor ve sağlıklı. Her gün 06:00 UTC'de radioid.net'ten altı CSV üretilip
-GitHub Pages'e yayınlanıyor; iş başarısız olursa `uretim-hatasi` etiketiyle issue açılıyor.
-Bozuk indirme mevcut çıktının üzerine yazamıyor. 89 test `generator.py`'den önce koşuyor.
+Üretim çalışıyor ve sağlıklı. Her gün radioid.net'ten altı CSV üretilip GitHub Pages'e
+yayınlanıyor (kesin saat yok, bkz. 8. iş); iş başarısız olursa `uretim-hatasi` etiketiyle
+issue açılıyor. Bozuk indirme mevcut çıktının üzerine yazamıyor. 97 test `generator.py`'den
+önce koşuyor.
 
 Açık listede **yapılmayı bekleyen iş yok** — kalan iki madde de bilinçli kararla beklemede
 (aşağıda gerekçeleriyle). Yeni bir yön belirlenmeden buradan devam edilecek bir şey yok.
 
 ## Nerede kalındı
 
-Yedi iş bitti ve gerçek veriyle doğrulandı:
+Sekiz iş bitti; ilk yedisi gerçek veriyle doğrulandı, sekizincisi yalnızca testlerle (bkz. orada):
 
 ### 1. Avrupa/Türkiye filtresi artık MCC'ye bakıyor
 
@@ -136,6 +137,41 @@ beklediği alanları tek tek okuyor. `generated_at` eklenmesi eskiden `null.text
 scripti patlatıp tablodaki bütün sayıları `-` bırakırdı. Sözleşme teste bağlandı: her sayının
 sayfada bir hücresi olduğu, tarih için yer bulunduğu ve sayfada doldurulmamış yer tutucu
 kalmadığı doğrulanıyor (89 test).
+
+### 8. Denetim (2026-09-24): kutulama, zamanlama, izinler
+
+Program, GitHub ve site baştan denetlendi. Son 20 Actions çalıştırması yeşil, açık issue
+yok, 2026-09-24 logu: DMR 313.749 / Avrupa 114.756 / Türkiye 8.465, NXDN 17.842 /
+6.147 / 659; ülke boşluğu raporunda yalnızca bilinen 5 yanlış kayıt (US 3, Canada 2).
+
+**Kutulama hatası (5. işteki `normalize_case`):** karar parça bazında veriliyordu, yani
+doğru yazılmış bir alanın içindeki tek biçimli parça da `title()` yiyordu:
+`Frankfurt am Main` -> `Frankfurt Am Main`, `Jan van der Berg` -> `Jan Van Der Berg`,
+`Washington DC` -> `Washington Dc`. 5. iş karışık kutulu *parçaları* korumuştu ama küçük
+harfli ekleri ve büyük harfli kısaltmaları hesaba katmamıştı. Artık karar **alan bazında**:
+alanın tüm harfleri tek biçimdeyse düzeltiliyor, değilse alan olduğu gibi kalıyor.
+DMR'de ad ve soyad **ayrı** kutulanıyor — yoksa `Jean` + `DUPONT` birleşince karışık
+alan olur ve soyad düzelmezdi.
+
+**Bu sefer gerçek veriyle ölçülmedi.** Oturumun ağ politikası radioid.net, github.io ve
+artifact blob deposunu engelliyordu; kaç kaydın etkilendiği bilinmiyor. Hollanda, Almanya,
+Brezilya kayıtlarında sık olması beklenir. Bir sonraki oturum ağ erişimiyle
+`python generator.py` çalıştırıp `Rewrote N names` satırını 13.037 (2026-09-24, eski kural)
+ile karşılaştırmalı; düşüş beklenen yöndedir.
+
+**Bilinen sınır:** tek başına büyük harfli kısa bir alan (eyalet `NSW`, `SP`) hâlâ `Nsw`
+olur — alanın kendisi tek biçimli. radioid'in eyaleti kısaltmayla mı tam adla mı tuttuğu
+ölçülmedi.
+
+**Zamanlama:** cron `0 6` idi ama zamanlanmış çalıştırmalar 10:20-12:20 UTC arasında
+başlıyordu (GitHub yük altında erteliyor, 17 gün boyunca her gün). Site ve README "06:00 UTC"
+vaat ediyordu; artık "günde bir kez, son çalıştırma altta" diyorlar. Cron saat başından
+`23 5`'e kaydırıldı — gecikmeyi azaltıp azaltmadığı bir hafta izlenmeli, garanti değil.
+
+**Küçükler:** workflow izni `contents: write` -> `read` (iş depoya yazmıyor). İndirme
+`utf-8-sig` ile çözülüyor (BOM gelirse her satır geçersiz sayılıyordu). `transliterate_field`
+boşluğu sadeleştiriyor (unidecode CJK sonrası boşluk bırakıyor, alan içi satır sonu CSV'de
+çok satırlı hücre üretirdi).
 
 ## Ölçülen sonuç (2026-09-07 verisi)
 
