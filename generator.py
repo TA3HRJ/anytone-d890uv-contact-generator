@@ -119,6 +119,23 @@ def truncate_name(name: str) -> str:
     return truncated
 
 
+# 4+ harfli olup yer adlarında küçük yazılan bağlaçlar ("Newcastle upon Tyne",
+# "Weston super Mare", "Cassano delle Murge").
+LOWERCASE_CONNECTORS = {"upon", "under", "near", "super", "della", "delle", "dello",
+                        "degli", "sous", "unter", "uber", "sobre"}
+
+
+def is_lowercase_word(token: str) -> bool:
+    """Karışık kutulu alanın içinde unutulmuş küçük harf mi ("Saint cloud").
+
+    3 harf ve altı bilerek dışarıda: o sınıf neredeyse tamamen bağlaç
+    (de, am, van, der, nad, og, sur — 2026-09-24 verisinde 7.854 parça). Büyük harfli
+    parçalara hiç dokunulmuyor: 4+ harflilerin yarısı kısaltma (ARES, NZART, DARC).
+    """
+    return (token.isalpha() and token.islower() and len(token) >= 4
+            and token not in LOWERCASE_CONNECTORS)
+
+
 def normalize_case(value: str) -> str:
     """CAPS LOCK ile ya da tamamen küçük harfle girilmiş parçaları düzeltir.
 
@@ -131,9 +148,13 @@ def normalize_case(value: str) -> str:
     "Frankfurt am Main" -> "Frankfurt Am Main", "Jan van der Berg" -> "Jan Van Der
     Berg", "Washington DC" -> "Washington Dc".
 
+    Karışık kutulu alanda yalnızca unutulmuş 4+ harfli küçük kelimeler düzeltiliyor
+    ("Saint cloud" -> "Saint Cloud", bkz. is_lowercase_word). Alan bazında karar tek
+    başına bunları olduğu gibi bırakıyordu (2026-09-24 verisinde ~1.700 alan).
+
     Dokunulmayanlar:
-    - Karışık kutulu alanlar (McDonald, MacKenzie, "Frankfurt am Main") — zaten doğru
-      yazılmış, düzleştirmek bozardı.
+    - Karışık kutulu alanların geri kalanı (McDonald, MacKenzie, "Frankfurt am Main",
+      "Washington DC") — zaten doğru yazılmış, düzleştirmek bozardı.
     - Rakam içeren parçalar — isim alanına yazılmış çağrı işaretleri (K2BSA, SV8JNL).
 
     Baş harfler ayrı bir kural istemiyor: title() tek harfi olduğu gibi bırakıyor,
@@ -146,7 +167,8 @@ def normalize_case(value: str) -> str:
     uniform = (all(c.isupper() for c in letters)
                or all(c.islower() for c in letters))
     if not uniform:
-        return " ".join(value.split())
+        return " ".join(token.title() if is_lowercase_word(token) else token
+                        for token in value.split())
     return " ".join(token if any(c.isdigit() for c in token) else token.title()
                     for token in value.split())
 

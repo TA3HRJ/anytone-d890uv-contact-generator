@@ -117,6 +117,28 @@ def test_lowercase_particles_and_abbreviations_in_correct_fields_survive(already
     assert g.normalize_case(already_correct) == already_correct
 
 
+@pytest.mark.parametrize("raw,expected", [
+    ("Saint cloud", "Saint Cloud"),
+    ("Sao paulo", "Sao Paulo"),
+    ("Stoke on trent", "Stoke on Trent"),
+    ("Tony de martino", "Tony de Martino"),
+    ("PUGET sur Argens", "PUGET sur Argens"),
+    ("jugovzhodna Slovenija", "Jugovzhodna Slovenija"),
+])
+def test_forgotten_lowercase_words_in_mixed_fields_are_fixed(raw, expected):
+    # Alan bazında karar bunları olduğu gibi bırakıyordu; kısa bağlaçlar ve
+    # büyük harfli parçalar yine korunuyor
+    assert g.normalize_case(raw) == expected
+
+
+@pytest.mark.parametrize("already_correct", [
+    "Newcastle upon Tyne", "Weston super Mare", "Cassano delle Murge",
+    "Snohomish ACS", "NZART Branch",
+])
+def test_long_connectors_and_acronyms_in_mixed_fields_survive(already_correct):
+    assert g.normalize_case(already_correct) == already_correct
+
+
 def test_case_fix_applies_through_clean_name():
     assert g.clean_name("ESMERALDO", "FORTALEZA") == "Esmeraldo"
     assert g.clean_name("carlos", "") == "Carlos"

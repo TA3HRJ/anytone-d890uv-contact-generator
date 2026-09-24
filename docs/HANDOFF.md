@@ -6,7 +6,7 @@ Son güncelleme: 2026-09-24
 
 Üretim çalışıyor ve sağlıklı. Her gün radioid.net'ten altı CSV üretilip GitHub Pages'e
 yayınlanıyor (kesin saat yok, bkz. 8. iş); iş başarısız olursa `uretim-hatasi` etiketiyle
-issue açılıyor. Bozuk indirme mevcut çıktının üzerine yazamıyor. 97 test `generator.py`'den
+issue açılıyor. Bozuk indirme mevcut çıktının üzerine yazamıyor. 108 test `generator.py`'den
 önce koşuyor.
 
 Açık listede **yapılmayı bekleyen iş yok** — kalan iki madde de bilinçli kararla beklemede
@@ -14,7 +14,7 @@ Açık listede **yapılmayı bekleyen iş yok** — kalan iki madde de bilinçli
 
 ## Nerede kalındı
 
-Sekiz iş bitti; ilk yedisi gerçek veriyle doğrulandı, sekizincisi yalnızca testlerle (bkz. orada):
+Dokuz iş bitti, hepsi gerçek veriyle doğrulandı (8. iş 9. işte ölçüldü):
 
 ### 1. Avrupa/Türkiye filtresi artık MCC'ye bakıyor
 
@@ -153,15 +153,12 @@ alanın tüm harfleri tek biçimdeyse düzeltiliyor, değilse alan olduğu gibi 
 DMR'de ad ve soyad **ayrı** kutulanıyor — yoksa `Jean` + `DUPONT` birleşince karışık
 alan olur ve soyad düzelmezdi.
 
-**Bu sefer gerçek veriyle ölçülmedi.** Oturumun ağ politikası radioid.net, github.io ve
-artifact blob deposunu engelliyordu; kaç kaydın etkilendiği bilinmiyor. Hollanda, Almanya,
-Brezilya kayıtlarında sık olması beklenir. Bir sonraki oturum ağ erişimiyle
-`python generator.py` çalıştırıp `Rewrote N names` satırını 13.037 (2026-09-24, eski kural)
-ile karşılaştırmalı; düşüş beklenen yöndedir.
+Bu oturumda ağ olmadığı için ölçülemedi; ölçüm ve çıkan yan etkinin düzeltmesi 9. işte.
 
-**Bilinen sınır:** tek başına büyük harfli kısa bir alan (eyalet `NSW`, `SP`) hâlâ `Nsw`
-olur — alanın kendisi tek biçimli. radioid'in eyaleti kısaltmayla mı tam adla mı tuttuğu
-ölçülmedi.
+**"Bilinen sınır" ölçüldü, sorun değil:** tek başına kısa eyalet alanı (`NSW` -> `Nsw`
+korkusu) veride yok. 3 harf ve altındaki bütün STATE değerleri zaten tam ad (`Zug`, `Ica`,
+`Goa`; DMR'de toplam 37). `NSW`/`SP` yalnızca karışık alanların *içinde* geçiyor, orada
+korunuyor.
 
 **Zamanlama:** cron `0 6` idi ama zamanlanmış çalıştırmalar 10:20-12:20 UTC arasında
 başlıyordu (GitHub yük altında erteliyor, 17 gün boyunca her gün). Site ve README "06:00 UTC"
@@ -172,6 +169,44 @@ vaat ediyordu; artık "günde bir kez, son çalıştırma altta" diyorlar. Cron 
 `utf-8-sig` ile çözülüyor (BOM gelirse her satır geçersiz sayılıyordu). `transliterate_field`
 boşluğu sadeleştiriyor (unidecode CJK sonrası boşluk bırakıyor, alan içi satır sonu CSV'de
 çok satırlı hücre üretirdi).
+
+### 9. Kutulama gerçek veriyle ölçüldü, karışık alandaki unutulmuş küçük harf düzeltildi
+
+Bu makinede Python yoktu; `winget` ile Python 3.13 (kullanıcı kapsamı) kuruldu, depo
+içinde `.venv` açıldı (kendi `.gitignore`'u var, depoya girmiyor). Ölçüm 2026-09-24
+verisiyle, eski (`56958de~1`) ve yeni `generator.py` **aynı indirilmiş dökümün** üzerinde
+koşturularak yapıldı — eski kural üretimdeki 13.037'yi birebir verdi, yani veri aynıydı.
+
+**8. işin etkisi (alan bazında karar):** DMR'de ~9.300 şehir/bölge alanı düzeldi
+(`Rio De Janeiro` -> `Rio de Janeiro` 110+676, `Reg.Metr. De Santiago` -> `... de ...` 1.057,
+`Dki Jakarta` -> `DKI Jakarta` 257, `Frankfurt Am Main` 23). İsimde 828 alan değişti,
+çoğu kısaltmanın korunması (`Snohomish ACS`, `Scouts WA`).
+
+**Ama bir gerileme getirmişti:** karışık kutulu alanın içinde gerçekten unutulmuş küçük harf
+artık düzelmiyordu — `Saint cloud`, `Ernest southwood`, `Jean pierre`, `Radio club`,
+`Sao paulo`. Eski parça bazlı kural bunları düzeltiyordu.
+
+**Karışık alanlardaki parçalar sınıflara ayrılıp sayıldı (DMR):**
+
+| Sınıf | Adet | İçerik | Karar |
+|---|---|---|---|
+| küçük, ≤3 harf | 7.854 | neredeyse tamamı bağlaç: de, do, del, am, nad, og, sur | dokunma |
+| küçük, ≥4 harf | 1.964 | çoğu unutulmuş: city, club, trent, island, pierre | **düzelt** |
+| BÜYÜK, 2-3 harf | 1.408 | kısaltma: DKI, ARC, NSW, SP, RC | dokunma |
+| BÜYÜK, ≥4 harf | 445 | yarı yarıya: ARES, NZART, DARC, IEEE / KONYA, TOLEDO | dokunma |
+
+**Yeni kural (`is_lowercase_word`):** karışık alanda yalnızca 4+ harfli, tamamen küçük,
+yalnız harften oluşan parçalar `title()` alıyor. 4+ harfli bağlaçlar için küçük bir istisna
+listesi var (`LOWERCASE_CONNECTORS`: upon, under, super, della/delle/degli…) —
+`Newcastle upon Tyne` 59 kez geçiyor. Tek biçimli alanların davranışı değişmedi.
+
+**Ölçülen sonuç:** yeni kural 8. işin üzerine ~1.700 alanı daha düzeltiyor (DMR isim 209,
+şehir 1.385, bölge 50; NXDN 58). Rastgele örneklemde yanlış düzeltme görülmedi.
+`Rewrote N names`: eski 13.037 -> alan bazlı 12.356 -> şimdiki 12.538.
+
+**Kalan, bilerek bırakılan:** karışık alandaki 3 harfli küçük kelimeler (`Castel san
+Giorgio`, `Paris Sv7 lpk`) ve büyük harfle yazılmış yer adları (`PUGET sur Argens`) —
+ikisini de bağlaçtan/kısaltmadan ayırt etmek elle tutulan bir liste gerektirir.
 
 ## Ölçülen sonuç (2026-09-07 verisi)
 
