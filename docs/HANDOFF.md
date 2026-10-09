@@ -240,8 +240,11 @@ Ana sayfanın görünümü değişirse önce orası, sonra bu depo güncellenir.
   kaydırıyor. Burada önce `<div class="wrap"><div class="legal">` ile çözüldü, sonra
   standardın kendisi düzeltildi (sürüm 1.1): `max-width` `.legal`'den çocuklarına
   (`.legal>*`) taşındı, iki kalıp da doğru hizalanıyor. Bu depodaki `family.css` 1.1'e
-  eşitlendi. `turkey-repeaters/docs/index.html` eski kalıbı kullanıyor; o site yeni
-  `family.css`'i kopyalayınca düzelir.
+  eşitlendi. turkey-repeaters'a yalnızca bu düzeltme yamalandı (gerekçesi orada HANDOFF'ta).
+- **Standart hareketli:** başka oturumlar aynı "1.1" etiketi altında `.fam-bar .bar` →
+  `.fam-row` ve yeni `--series-*` renkleri ekledi. Bu depodaki kopya o değişikliklerden
+  **önceki** 1.1; sayfa `wrap bar` kullanıyor. Standardı buraya yeniden kopyalarken önce
+  `index.html`'deki `wrap bar`'ı `wrap fam-row` yap, yoksa başlık çubuğu dağılır.
 - Masaüstü (1280) ve 375px'te yerel önizlemeyle bakıldı: yatay kaydırma yok, şerit ile
   başlık çubuğu çakışmıyor, aprsagent.com ile yan yana aynı aile görünüyor.
 
