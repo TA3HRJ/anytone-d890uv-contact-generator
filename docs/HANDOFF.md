@@ -235,7 +235,8 @@ Ana sayfanın görünümü değişirse önce orası, sonra bu depo güncellenir.
 - Başlık çubuğunda ana sayfaya geri bağlantı, altta "Ham radio tools" satırı,
   `#legal` bölümü (ticari markalar + sorumluluk reddi + radioid.net/kişisel veri maddesi),
   README'de "Trademarks and disclaimer". AnyTone/D890UV için ® konmadı: sahibinin kendi
-  belgesinde ® kanıtı yok, genel "olabilir" cümlesi kapsıyor. Site tek dilli kaldı (İngilizce).
+  belgesinde ® kanıtı yok, genel "olabilir" cümlesi kapsıyor. İlk sürümde site tek dilli
+  (İngilizce) bırakılmıştı; 11. işte EN/TR yapıldı.
 - Workflow artık `family.css` ve `assets/`'i de `_site`'a kopyalıyor. **Tuzak:** sayfaya yeni
   yerel dosya eklenip workflow'a eklenmezse site temasız yayınlanır; bunu
   `test_workflow_publishes_every_local_file_the_page_loads` yakalıyor (kopyalama satırı
@@ -246,14 +247,33 @@ Ana sayfanın görünümü değişirse önce orası, sonra bu depo güncellenir.
   standardın kendisi düzeltildi (sürüm 1.1): `max-width` `.legal`'den çocuklarına
   (`.legal>*`) taşındı, iki kalıp da doğru hizalanıyor. Bu depodaki `family.css` 1.1'e
   eşitlendi. turkey-repeaters'a yalnızca bu düzeltme yamalandı (gerekçesi orada HANDOFF'ta).
-- **Standart hareketli:** başka oturumlar aynı "1.1" etiketi altında `.fam-bar .bar` →
-  `.fam-row` ve yeni `--series-*` renkleri ekledi. Bu depodaki kopya o değişikliklerden
-  **önceki** 1.1; sayfa `wrap bar` kullanıyor. Standardı buraya yeniden kopyalarken önce
-  `index.html`'deki `wrap bar`'ı `wrap fam-row` yap, yoksa başlık çubuğu dağılır.
+- **Standart hareketli:** başka oturumlar 1.2 (`.bar` → `.fam-row`, yeni `--series-*`) ve
+  1.3 (tema düğmesi `.thm`, QRZ bağlantısı) çıkardı ve bu depoyu da 1.3'e eşitledi
+  (`2a15520`, `a2cc1c2`). Sayfa artık `wrap fam-row` kullanıyor. Standart başka oturumlarca
+  da değiştiriliyor; buraya kopyalamadan önce `git log` ve standardın README §6'sına bak.
 - Masaüstü (1280) ve 375px'te yerel önizlemeyle bakıldı: yatay kaydırma yok, şerit ile
   başlık çubuğu çakışmıyor, aprsagent.com ile yan yana aynı aile görünüyor.
 - **Yayında (2026-10-09 22:03 UTC, elle tetiklenen koşu #104, `1ce8506`):** canlıda
   `family.css`, logo, `stats.json` ve CSV'ler 200; sayfa yeni temada, sayılar ve tarih geliyor.
+
+### 11. Sayfa iki dilli (TR/EN), varsayılan TR (2026-10-10)
+
+Diğer aile sitelerinde olan EN/TR anahtarı burada yoktu; 10. işte talimattaki "tek dilliyse
+sitenin dilinde" cümlesi "İngilizce kalsın" diye okunmuş ve kullanıcıya sorulmamıştı.
+Kullanıcı istedi, varsayılanı **her zaman TR** seçti (tarayıcı diline bakılmıyor).
+
+- HTML'in kendisi Türkçe; `<head>`'deki küçük betik `localStorage["lang"]`'i okuyup
+  `<html lang>`'i ilk boyamadan önce koyuyor. Sözlük (`STRINGS.tr` / `STRINGS.en`) sayfa
+  sonunda; `data-i` öğelerin içeriğini, `data-i-aria` indirme düğmelerinin `aria-label`'ını
+  değiştiriyor. Anahtar adı `lang`, coax ve repeaters ile aynı.
+- Sayılar seçili dile göre biçimleniyor (TR `8.518`, EN `8,518`); eskiden tarayıcı diline bağlıydı.
+- CPS menü adları (`DMR > Digital Contact List`, `Tool > Import`) iki dilde de İngilizce —
+  CPS'in arayüzü öyle.
+- `test_every_translated_element_has_both_languages`: sayfadaki her anahtarın iki sözlükte
+  de olduğunu ve sözlüklerin eşit olduğunu denetliyor (bir EN anahtarı silinerek denendi,
+  test kaldı ve eksik anahtarı adıyla gösterdi).
+- Yerelde doğrulandı: boş tarayıcıda TR açılıyor, EN'ye geçiş ve yenilemeden sonra hatırlama
+  çalışıyor, 375px'te tema + EN/TR + GitHub sığıyor, yatay kaydırma yok.
 
 ## Ölçülen sonuç (2026-09-07 verisi)
 

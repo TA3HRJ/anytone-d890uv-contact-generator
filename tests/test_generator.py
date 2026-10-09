@@ -378,6 +378,20 @@ def test_workflow_publishes_every_local_file_the_page_loads():
         assert top in workflow, f"{ref} workflow'da _site'a kopyalanmiyor"
 
 
+def test_every_translated_element_has_both_languages():
+    # Sözlükte karşılığı olmayan öğe dil değişince eski dilde takılı kalır
+    html = INDEX_HTML.read_text(encoding="utf-8")
+    used = set(re.findall(r'data-i(?:-aria)?="(\w+)"', html))
+    tr_block = html.split("tr: {", 1)[1].split("en: {", 1)[0]
+    en_block = html.split("en: {", 1)[1].split("};", 1)[0]
+    key = re.compile(r"^\s*(\w+):", re.MULTILINE)
+    tr_keys, en_keys = set(key.findall(tr_block)), set(key.findall(en_block))
+    assert used, "sayfada data-i bulunamadi; desen bozulmus olabilir"
+    assert used <= tr_keys, f"TR sozlukte eksik: {sorted(used - tr_keys)}"
+    assert used <= en_keys, f"EN sozlukte eksik: {sorted(used - en_keys)}"
+    assert tr_keys == en_keys, f"diller esit degil: {sorted(tr_keys ^ en_keys)}"
+
+
 def test_workflow_does_not_patch_the_page():
     workflow = (Path(__file__).resolve().parent.parent
                 / ".github" / "workflows" / "generate.yml").read_text(encoding="utf-8")

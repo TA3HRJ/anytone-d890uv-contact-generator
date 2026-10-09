@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f6f3ea">
-<script>(function(){var t=null;try{t=localStorage.getItem("theme")}catch(e){}
-document.documentElement.dataset.theme=t==="dark"?"dark":"light";})();</script>
-    <title>AnyTone D890UV Contact List Download</title>
-    <meta name="description" content="DMR and NXDN contact lists for the AnyTone D890UV and D878UV, built daily from radioid.net and ready to import into the CPS.">
+<script>(function(){var t=null,l=null;try{t=localStorage.getItem("theme");l=localStorage.getItem("lang")}catch(e){}
+document.documentElement.dataset.theme=t==="dark"?"dark":"light";
+document.documentElement.lang=l==="en"?"en":"tr";})();</script>
+    <title>AnyTone D890UV kişi listeleri</title>
+    <meta name="description" content="AnyTone D890UV ve D878UV için radioid.net'ten her gün üretilen, CPS'e aktarılmaya hazır DMR ve NXDN kişi listeleri.">
     <link rel="stylesheet" href="family.css">
     <style>
         /* Yalnızca bu sayfaya özgü parçalar; renk ve yazı family.css değişkenlerinden. */
@@ -36,49 +37,53 @@ document.documentElement.dataset.theme=t==="dark"?"dark":"light";})();</script>
 <body>
 <header class="fam-bar">
     <div class="wrap fam-row">
-        <a class="fam-home" href="https://aprsagent.com/#tools" title="aprsagent.com — Ham radio tools">
+        <a class="fam-home" href="https://aprsagent.com/#tools" title="aprsagent.com — Telsizci araçları / Ham radio tools">
             <img src="assets/aprsagent-mark.svg" alt=""><span class="t">aprsagent.com</span>
         </a>
         <span class="fam-sep" aria-hidden="true"></span>
         <a class="fam-site" href="./">CONTACTS</a>
         <span class="sp"></span>
         <button class="thm" type="button" data-thm title="Açık / koyu tema · Light / dark theme" aria-label="Açık / koyu tema · Light / dark theme"><svg class="i-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.8 5.8 0 1 0 7.1 7.1z"/></svg><svg class="i-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 .8v2M8 13.2v2M.8 8h2M13.2 8h2M2.9 2.9l1.4 1.4M11.7 11.7l1.4 1.4M2.9 13.1l1.4-1.4M11.7 4.3l1.4-1.4"/></svg></button>
+        <div class="lang" role="group" aria-label="Language">
+            <button type="button" data-lang="en" aria-pressed="false">EN</button>
+            <button type="button" data-lang="tr" aria-pressed="true">TR</button>
+        </div>
         <a class="ghl" href="https://github.com/TA3HRJ/anytone-d890uv-contact-generator" rel="noopener">GitHub ↗</a>
     </div>
 </header>
 
 <main>
     <div class="wrap hero">
-        <h1>AnyTone D890UV contact lists</h1>
-        <p class="lede">DMR and NXDN contact lists from radioid.net, ready to import into the AnyTone CPS.</p>
+        <h1 data-i="h1">AnyTone D890UV kişi listeleri</h1>
+        <p class="lede" data-i="lede">radioid.net verisinden DMR ve NXDN kişi listeleri; AnyTone CPS'e aktarılmaya hazır.</p>
         <ul class="kv">
-            <li><b>Screen</b><span>Plain ASCII only: Turkish, German, Cyrillic, CJK and other characters are transliterated. Names fit the 16-character display.</span></li>
-            <li><b>Radios</b><span>D890UV, also D878UV</span></li>
-            <li><b>Source</b><span><a href="https://radioid.net/database/dumps">radioid.net</a> database dumps, rebuilt once a day</span></li>
-            <li><b>Last build</b><span id="generated_at">—</span></li>
+            <li><b data-i="kvScreen">Ekran</b><span data-i="kvScreenV">Yalnızca düz ASCII: Türkçe, Almanca, Kiril, CJK ve diğer karakterler en yakın Latin harfine çevrilir. İsimler 16 karakterlik ekrana sığar.</span></li>
+            <li><b data-i="kvRadios">Telsizler</b><span data-i="kvRadiosV">D890UV, ayrıca D878UV</span></li>
+            <li><b data-i="kvSource">Kaynak</b><span data-i="kvSourceV"><a href="https://radioid.net/database/dumps">radioid.net</a> veri dökümleri, günde bir kez yeniden üretilir</span></li>
+            <li><b data-i="kvBuild">Son üretim</b><span id="generated_at">—</span></li>
         </ul>
     </div>
 
     <section id="dmr">
         <div class="wrap">
-            <h2>DMR contact lists</h2>
+            <h2 data-i="dmrH">DMR kişi listeleri</h2>
             <p class="sub">CPS: DMR &gt; Digital Contact List</p>
             <table class="lists">
-                <tr><th>Region</th><th class="num">Records</th><th><span hidden>Download</span></th></tr>
+                <tr><th data-i="thRegion">Bölge</th><th class="num" data-i="thRecords">Kayıt</th><th><span hidden data-i="dl">İndir</span></th></tr>
                 <tr>
-                    <td>Turkey</td>
+                    <td data-i="tr">Türkiye</td>
                     <td class="count" id="dmr_turkey">-</td>
-                    <td class="dl"><a class="btn s sm" href="DMR%20Digital%20Contact%20List%20-%20Turkey.csv" download aria-label="Download DMR Turkey CSV">Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="DMR%20Digital%20Contact%20List%20-%20Turkey.csv" download data-i="dl" data-i-aria="dlDmrTr" aria-label="DMR Türkiye CSV indir">İndir</a></td>
                 </tr>
                 <tr>
-                    <td>Europe</td>
+                    <td data-i="eu">Avrupa</td>
                     <td class="count" id="dmr_europe">-</td>
-                    <td class="dl"><a class="btn s sm" href="DMR%20Digital%20Contact%20List%20-%20Europe.csv" download aria-label="Download DMR Europe CSV">Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="DMR%20Digital%20Contact%20List%20-%20Europe.csv" download data-i="dl" data-i-aria="dlDmrEu" aria-label="DMR Avrupa CSV indir">İndir</a></td>
                 </tr>
                 <tr>
-                    <td>World</td>
+                    <td data-i="world">Dünya</td>
                     <td class="count" id="dmr_world">-</td>
-                    <td class="dl"><a class="btn s sm" href="DMR%20Digital%20Contact%20List%20-%20World.csv" download aria-label="Download DMR World CSV">Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="DMR%20Digital%20Contact%20List%20-%20World.csv" download data-i="dl" data-i-aria="dlDmrWorld" aria-label="DMR Dünya CSV indir">İndir</a></td>
                 </tr>
             </table>
         </div>
@@ -86,24 +91,24 @@ document.documentElement.dataset.theme=t==="dark"?"dark":"light";})();</script>
 
     <section id="nxdn">
         <div class="wrap">
-            <h2>NXDN contact lists</h2>
+            <h2 data-i="nxdnH">NXDN kişi listeleri</h2>
             <p class="sub">CPS: NX &gt; NX Digital Contact List</p>
             <table class="lists">
-                <tr><th>Region</th><th class="num">Records</th><th><span hidden>Download</span></th></tr>
+                <tr><th data-i="thRegion">Bölge</th><th class="num" data-i="thRecords">Kayıt</th><th><span hidden data-i="dl">İndir</span></th></tr>
                 <tr>
-                    <td>Turkey</td>
+                    <td data-i="tr">Türkiye</td>
                     <td class="count" id="nxdn_turkey">-</td>
-                    <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20Turkey.csv" download aria-label="Download NXDN Turkey CSV">Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20Turkey.csv" download data-i="dl" data-i-aria="dlNxTr" aria-label="NXDN Türkiye CSV indir">İndir</a></td>
                 </tr>
                 <tr>
-                    <td>Europe</td>
+                    <td data-i="eu">Avrupa</td>
                     <td class="count" id="nxdn_europe">-</td>
-                    <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20Europe.csv" download aria-label="Download NXDN Europe CSV">Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20Europe.csv" download data-i="dl" data-i-aria="dlNxEu" aria-label="NXDN Avrupa CSV indir">İndir</a></td>
                 </tr>
                 <tr>
-                    <td>World</td>
+                    <td data-i="world">Dünya</td>
                     <td class="count" id="nxdn_world">-</td>
-                    <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20World.csv" download aria-label="Download NXDN World CSV">Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20World.csv" download data-i="dl" data-i-aria="dlNxWorld" aria-label="NXDN Dünya CSV indir">İndir</a></td>
                 </tr>
             </table>
         </div>
@@ -111,39 +116,42 @@ document.documentElement.dataset.theme=t==="dark"?"dark":"light";})();</script>
 
     <section id="import">
         <div class="wrap">
-            <h2>How to import</h2>
+            <h2 data-i="importH">İçe aktarma</h2>
             <ol class="steps">
-                <li><span>Download the CSV file for your region.</span></li>
-                <li><span>Open the AnyTone CPS software.</span></li>
-                <li><span>For DMR go to <strong>DMR &gt; Digital Contact List</strong>; for NXDN go to <strong>NX &gt; NX Digital Contact List</strong>.</span></li>
-                <li><span>Use <strong>Tool &gt; Import</strong> and select the CSV file.</span></li>
-                <li><span>Write the codeplug to the radio.</span></li>
+                <li><span data-i="step1">Bölgenize ait CSV dosyasını indirin.</span></li>
+                <li><span data-i="step2">AnyTone CPS yazılımını açın.</span></li>
+                <li><span data-i="step3">DMR için <strong>DMR &gt; Digital Contact List</strong>, NXDN için <strong>NX &gt; NX Digital Contact List</strong> menüsüne gidin.</span></li>
+                <li><span data-i="step4"><strong>Tool &gt; Import</strong> ile CSV dosyasını seçin.</span></li>
+                <li><span data-i="step5">Codeplug'ı telsize yazın.</span></li>
             </ol>
         </div>
     </section>
 
     <section id="legal">
         <div class="wrap"><div class="legal">
-            <h2>Trademarks</h2>
-            <p>Brand, product, organisation and company names on this site are trademarks or registered
-                trademarks of their respective owners and are used only for identification.</p>
-            <p>APRS<sup class="tm">®</sup> is a registered trademark of APRS Software and Bob Bruninga, WB4APR (SK),
-                who created APRS and gave the hobby the protocol.</p>
-            <p>AnyTone, D890UV and D878UV may also be trademarks or registered trademarks of their owner. This
-                project is not affiliated with, endorsed, approved or sponsored by any organisation or manufacturer
-                named, including radioid.net. The licence grants no rights in these names.</p>
+            <h2 data-i="tmH">Ticari markalar</h2>
+            <p data-i="tm1">Bu sitede geçen marka, ürün, kurum ve şirket adları sahiplerinin ticari markaları ya da
+                tescilli ticari markalarıdır ve yalnızca tanımlama amacıyla kullanılır.</p>
+            <p data-i="tm2">APRS<sup class="tm">®</sup>, APRS Software ile APRS'i tasarlayan ve bu protokolü amatör
+                telsizciliğe kazandıran Bob Bruninga WB4APR'ın (SK) tescilli markasıdır.</p>
+            <p data-i="tm3">AnyTone, D890UV ve D878UV de sahibinin ticari markaları ya da tescilli ticari markaları
+                olabilir. Bu proje, radioid.net dahil adı geçen hiçbir kurum ya da üreticiyle bağlantılı değildir;
+                onlar tarafından desteklenmez, onaylanmaz ya da sponsor edilmez. Lisans bu adlar üzerinde herhangi
+                bir hak vermez.</p>
 
-            <h2>Disclaimer</h2>
+            <h2 data-i="discH">Sorumluluk reddi</h2>
             <ul>
-                <li>The lists are compiled automatically from radioid.net's public database dumps. Names are
-                    transliterated to ASCII and shortened to 16 characters, so they can differ from the source,
-                    and the source may change without notice.</li>
-                <li>Accuracy and currency depend on radioid.net. Its terms govern the personal data in these
-                    lists; the lists are for amateur radio use only. AnyTone and D890UV are trademarks of their
-                    owner.</li>
-                <li>External links lead to third-party sites; this site is not responsible for their content.</li>
-                <li>Information is provided "as is", without any warranty of accuracy, completeness or fitness for
-                    a particular purpose, and no liability is accepted for any damage arising from its use.</li>
+                <li data-i="disc1">Listeler radioid.net'in herkese açık veri dökümlerinden otomatik derlenir. İsimler
+                    ASCII'ye çevrilip 16 karaktere kısaltıldığı için kaynaktan farklı olabilir; kaynak da haber
+                    vermeden değişebilir.</li>
+                <li data-i="disc2">Doğruluk ve güncellik radioid.net'e bağlıdır. Bu listelerdeki kişisel verilerin
+                    kullanım koşulları radioid.net'e aittir; listeler yalnızca amatör telsiz kullanımı içindir.
+                    AnyTone ve D890UV sahibinin ticari markalarıdır.</li>
+                <li data-i="disc3">Dış bağlantılar üçüncü taraf sitelere gider; içeriklerinden bu site sorumlu
+                    değildir.</li>
+                <li data-i="disc4">Bilgiler "olduğu gibi" sunulur. Doğruluk, eksiksizlik ya da belirli bir amaca
+                    uygunluk konusunda hiçbir garanti verilmez ve kullanımdan doğabilecek zararlardan sorumluluk
+                    kabul edilmez.</li>
             </ul>
         </div></div>
     </section>
@@ -151,45 +159,179 @@ document.documentElement.dataset.theme=t==="dark"?"dark":"light";})();</script>
 
 <footer class="fam-foot">
     <div class="wrap">
-        <nav class="fam-tools" aria-label="Ham radio tools">
-            <b>Ham radio tools</b>
+        <nav class="fam-tools" aria-label="Telsizci araçları / Ham radio tools">
+            <b data-i="famTools">Telsizci araçları</b>
             <a href="https://aprsagent.com/">aprsagent.com</a>
-            <a href="https://coax.aprsagent.com/">Coax cables</a>
-            <a href="https://repeaters.aprsagent.com/">Repeaters</a>
-            <a href="https://sinav.aprsagent.com/">Exam prep</a>
-            <a href="https://contacts.aprsagent.com/" aria-current="page">AnyTone contacts</a>
+            <a href="https://coax.aprsagent.com/" data-i="famCoax">Kablo veritabanı</a>
+            <a href="https://repeaters.aprsagent.com/" data-i="famRep">Röleler</a>
+            <a href="https://sinav.aprsagent.com/" data-i="famExam">Sınav hazırlık</a>
+            <a href="https://contacts.aprsagent.com/" aria-current="page" data-i="famContacts">AnyTone rehber</a>
         </nav>
         <div class="fam-line">
-            <span>Code MIT · data from <a href="https://radioid.net/">radioid.net</a></span>
-            <a href="#import">How to import</a>
+            <span data-i="famLicence">Kod MIT · veri: <a href="https://radioid.net/">radioid.net</a></span>
+            <a href="#import" data-i="importH">İçe aktarma</a>
             <a href="https://github.com/TA3HRJ/anytone-d890uv-contact-generator" rel="noopener">GitHub</a>
             <span class="sp"></span>
-            <span>Operated by <a href="https://www.qrz.com/db/TA3HX" rel="noopener">TA3HX</a></span>
+            <span data-i="famOp">İşleten: <a href="https://www.qrz.com/db/TA3HX" rel="noopener">TA3HX</a></span>
         </div>
-        <p class="fam-legal">Brand and product names belong to their owners; this site is not affiliated with any
-            organisation or manufacturer. Information only, without warranty.
-            <a href="#legal">Trademarks and disclaimer</a></p>
+        <p class="fam-legal"><span data-i="famLegal">Marka ve ürün adları sahiplerinindir; bu site hiçbir kurum ya
+            da üreticiyle bağlantılı değildir. Bilgiler bilgi amaçlıdır, garanti verilmez.</span>
+            <a href="#legal" data-i="famLegalLink">Ticari markalar ve sorumluluk reddi</a></p>
     </div>
 </footer>
 
 <script>
+    // Sayfanın Türkçe hâli HTML'in kendisi; buradaki sözlük düğmeyle geçişte iki yönde de
+    // kullanılıyor. Anahtarı sözlükte olmayan öğe olduğu gibi kalır, boşalmaz.
+    const STRINGS = {
+        tr: {
+            title: "AnyTone D890UV kişi listeleri",
+            desc: "AnyTone D890UV ve D878UV için radioid.net'ten her gün üretilen, CPS'e aktarılmaya hazır DMR ve NXDN kişi listeleri.",
+            h1: "AnyTone D890UV kişi listeleri",
+            lede: "radioid.net verisinden DMR ve NXDN kişi listeleri; AnyTone CPS'e aktarılmaya hazır.",
+            kvScreen: "Ekran",
+            kvScreenV: "Yalnızca düz ASCII: Türkçe, Almanca, Kiril, CJK ve diğer karakterler en yakın Latin harfine çevrilir. İsimler 16 karakterlik ekrana sığar.",
+            kvRadios: "Telsizler",
+            kvRadiosV: "D890UV, ayrıca D878UV",
+            kvSource: "Kaynak",
+            kvSourceV: '<a href="https://radioid.net/database/dumps">radioid.net</a> veri dökümleri, günde bir kez yeniden üretilir',
+            kvBuild: "Son üretim",
+            dmrH: "DMR kişi listeleri",
+            nxdnH: "NXDN kişi listeleri",
+            thRegion: "Bölge",
+            thRecords: "Kayıt",
+            dl: "İndir",
+            tr: "Türkiye",
+            eu: "Avrupa",
+            world: "Dünya",
+            dlDmrTr: "DMR Türkiye CSV indir",
+            dlDmrEu: "DMR Avrupa CSV indir",
+            dlDmrWorld: "DMR Dünya CSV indir",
+            dlNxTr: "NXDN Türkiye CSV indir",
+            dlNxEu: "NXDN Avrupa CSV indir",
+            dlNxWorld: "NXDN Dünya CSV indir",
+            importH: "İçe aktarma",
+            step1: "Bölgenize ait CSV dosyasını indirin.",
+            step2: "AnyTone CPS yazılımını açın.",
+            step3: "DMR için <strong>DMR &gt; Digital Contact List</strong>, NXDN için <strong>NX &gt; NX Digital Contact List</strong> menüsüne gidin.",
+            step4: "<strong>Tool &gt; Import</strong> ile CSV dosyasını seçin.",
+            step5: "Codeplug'ı telsize yazın.",
+            tmH: "Ticari markalar",
+            tm1: "Bu sitede geçen marka, ürün, kurum ve şirket adları sahiplerinin ticari markaları ya da tescilli ticari markalarıdır ve yalnızca tanımlama amacıyla kullanılır.",
+            tm2: 'APRS<sup class="tm">®</sup>, APRS Software ile APRS\'i tasarlayan ve bu protokolü amatör telsizciliğe kazandıran Bob Bruninga WB4APR\'ın (SK) tescilli markasıdır.',
+            tm3: "AnyTone, D890UV ve D878UV de sahibinin ticari markaları ya da tescilli ticari markaları olabilir. Bu proje, radioid.net dahil adı geçen hiçbir kurum ya da üreticiyle bağlantılı değildir; onlar tarafından desteklenmez, onaylanmaz ya da sponsor edilmez. Lisans bu adlar üzerinde herhangi bir hak vermez.",
+            discH: "Sorumluluk reddi",
+            disc1: "Listeler radioid.net'in herkese açık veri dökümlerinden otomatik derlenir. İsimler ASCII'ye çevrilip 16 karaktere kısaltıldığı için kaynaktan farklı olabilir; kaynak da haber vermeden değişebilir.",
+            disc2: "Doğruluk ve güncellik radioid.net'e bağlıdır. Bu listelerdeki kişisel verilerin kullanım koşulları radioid.net'e aittir; listeler yalnızca amatör telsiz kullanımı içindir. AnyTone ve D890UV sahibinin ticari markalarıdır.",
+            disc3: "Dış bağlantılar üçüncü taraf sitelere gider; içeriklerinden bu site sorumlu değildir.",
+            disc4: "Bilgiler \"olduğu gibi\" sunulur. Doğruluk, eksiksizlik ya da belirli bir amaca uygunluk konusunda hiçbir garanti verilmez ve kullanımdan doğabilecek zararlardan sorumluluk kabul edilmez.",
+            famTools: "Telsizci araçları",
+            famCoax: "Kablo veritabanı",
+            famRep: "Röleler",
+            famExam: "Sınav hazırlık",
+            famContacts: "AnyTone rehber",
+            famLicence: 'Kod MIT · veri: <a href="https://radioid.net/">radioid.net</a>',
+            famOp: 'İşleten: <a href="https://www.qrz.com/db/TA3HX" rel="noopener">TA3HX</a>',
+            famLegal: "Marka ve ürün adları sahiplerinindir; bu site hiçbir kurum ya da üreticiyle bağlantılı değildir. Bilgiler bilgi amaçlıdır, garanti verilmez.",
+            famLegalLink: "Ticari markalar ve sorumluluk reddi"
+        },
+        en: {
+            title: "AnyTone D890UV contact lists",
+            desc: "DMR and NXDN contact lists for the AnyTone D890UV and D878UV, built daily from radioid.net and ready to import into the CPS.",
+            h1: "AnyTone D890UV contact lists",
+            lede: "DMR and NXDN contact lists from radioid.net, ready to import into the AnyTone CPS.",
+            kvScreen: "Screen",
+            kvScreenV: "Plain ASCII only: Turkish, German, Cyrillic, CJK and other characters are transliterated. Names fit the 16-character display.",
+            kvRadios: "Radios",
+            kvRadiosV: "D890UV, also D878UV",
+            kvSource: "Source",
+            kvSourceV: '<a href="https://radioid.net/database/dumps">radioid.net</a> database dumps, rebuilt once a day',
+            kvBuild: "Last build",
+            dmrH: "DMR contact lists",
+            nxdnH: "NXDN contact lists",
+            thRegion: "Region",
+            thRecords: "Records",
+            dl: "Download",
+            tr: "Turkey",
+            eu: "Europe",
+            world: "World",
+            dlDmrTr: "Download DMR Turkey CSV",
+            dlDmrEu: "Download DMR Europe CSV",
+            dlDmrWorld: "Download DMR World CSV",
+            dlNxTr: "Download NXDN Turkey CSV",
+            dlNxEu: "Download NXDN Europe CSV",
+            dlNxWorld: "Download NXDN World CSV",
+            importH: "How to import",
+            step1: "Download the CSV file for your region.",
+            step2: "Open the AnyTone CPS software.",
+            step3: "For DMR go to <strong>DMR &gt; Digital Contact List</strong>; for NXDN go to <strong>NX &gt; NX Digital Contact List</strong>.",
+            step4: "Use <strong>Tool &gt; Import</strong> and select the CSV file.",
+            step5: "Write the codeplug to the radio.",
+            tmH: "Trademarks",
+            tm1: "Brand, product, organisation and company names on this site are trademarks or registered trademarks of their respective owners and are used only for identification.",
+            tm2: 'APRS<sup class="tm">®</sup> is a registered trademark of APRS Software and Bob Bruninga, WB4APR (SK), who created APRS and gave the hobby the protocol.',
+            tm3: "AnyTone, D890UV and D878UV may also be trademarks or registered trademarks of their owner. This project is not affiliated with, endorsed, approved or sponsored by any organisation or manufacturer named, including radioid.net. The licence grants no rights in these names.",
+            discH: "Disclaimer",
+            disc1: "The lists are compiled automatically from radioid.net's public database dumps. Names are transliterated to ASCII and shortened to 16 characters, so they can differ from the source, and the source may change without notice.",
+            disc2: "Accuracy and currency depend on radioid.net. Its terms govern the personal data in these lists; the lists are for amateur radio use only. AnyTone and D890UV are trademarks of their owner.",
+            disc3: "External links lead to third-party sites; this site is not responsible for their content.",
+            disc4: "Information is provided \"as is\", without any warranty of accuracy, completeness or fitness for a particular purpose, and no liability is accepted for any damage arising from its use.",
+            famTools: "Ham radio tools",
+            famCoax: "Coax cables",
+            famRep: "Repeaters",
+            famExam: "Exam prep",
+            famContacts: "AnyTone contacts",
+            famLicence: 'Code MIT · data from <a href="https://radioid.net/">radioid.net</a>',
+            famOp: 'Operated by <a href="https://www.qrz.com/db/TA3HX" rel="noopener">TA3HX</a>',
+            famLegal: "Brand and product names belong to their owners; this site is not affiliated with any organisation or manufacturer. Information only, without warranty.",
+            famLegalLink: "Trademarks and disclaimer"
+        }
+    };
+
     // Tarih de sayılar da aynı dosyadan geliyor, bu yüzden ayrışamazlar.
     // Anahtarlar tek tek okunuyor: stats.json'a yeni bir alan eklendiğinde
     // karşılığı olmayan bir id aranıp sayfa boş kalmasın.
     const COUNT_KEYS = ["dmr_turkey", "dmr_europe", "dmr_world",
                         "nxdn_turkey", "nxdn_europe", "nxdn_world"];
+    let stats = null;
+
+    function renderCounts() {
+        if (!stats) return;
+        const locale = document.documentElement.lang === "en" ? "en-US" : "tr-TR";
+        for (const key of COUNT_KEYS) {
+            const cell = document.getElementById(key);
+            if (cell && typeof stats[key] === "number")
+                cell.textContent = stats[key].toLocaleString(locale);
+        }
+        const stamp = document.getElementById("generated_at");
+        if (stamp && stats.generated_at) stamp.textContent = stats.generated_at;
+    }
+
+    function setLang(lang) {
+        const s = STRINGS[lang] ? STRINGS[lang] : STRINGS.tr;
+        document.documentElement.lang = lang;
+        document.title = s.title;
+        document.querySelector('meta[name="description"]').content = s.desc;
+        document.querySelectorAll("[data-i]").forEach(el => {
+            if (s[el.dataset.i] !== undefined) el.innerHTML = s[el.dataset.i];
+        });
+        document.querySelectorAll("[data-i-aria]").forEach(el => {
+            if (s[el.dataset.iAria] !== undefined) el.setAttribute("aria-label", s[el.dataset.iAria]);
+        });
+        document.querySelectorAll(".lang [data-lang]").forEach(b =>
+            b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+        renderCounts();
+    }
+
+    document.querySelectorAll(".lang [data-lang]").forEach(b => b.addEventListener("click", () => {
+        setLang(b.dataset.lang);
+        try { localStorage.setItem("lang", b.dataset.lang); } catch (e) {}
+    }));
+    setLang(document.documentElement.lang === "en" ? "en" : "tr");
 
     fetch("stats.json", { cache: "no-cache" })
         .then(r => r.json())
-        .then(s => {
-            for (const key of COUNT_KEYS) {
-                const cell = document.getElementById(key);
-                if (cell && typeof s[key] === "number")
-                    cell.textContent = s[key].toLocaleString();
-            }
-            const stamp = document.getElementById("generated_at");
-            if (stamp && s.generated_at) stamp.textContent = s.generated_at;
-        });
+        .then(s => { stats = s; renderCounts(); });
 </script>
 <script>
 /* aprsagent.com family 1.3 theme button: light unless chosen, the choice remembered */
