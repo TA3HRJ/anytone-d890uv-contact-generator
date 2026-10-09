@@ -22,6 +22,11 @@ fark etmiyor. Sayfa kesin saat vaat etmediği için sorun değil, yeniden deneme
 Bu makinede `gh` yok; durum GitHub REST API'sinden anonim okunuyor:
 `Invoke-RestMethod https://api.github.com/repos/TA3HRJ/anytone-d890uv-contact-generator/actions/runs?per_page=10`.
 
+**Elle yayın (push yayın tetiklemez):** kullanıcının Chrome'unda GitHub oturumu açık;
+Claude in Chrome ile Actions → Generate Contact Lists → Run workflow'a basılabiliyor.
+Desktop uygulamasının kendi tarayıcı panelinde oturum **yok** — "erişim yok" sanıp kullanıcıya
+bırakma, önce Chrome'u dene.
+
 ## Nerede kalındı
 
 Dokuz iş bitti, hepsi gerçek veriyle doğrulandı (8. iş 9. işte ölçüldü):
@@ -247,6 +252,8 @@ Ana sayfanın görünümü değişirse önce orası, sonra bu depo güncellenir.
   `index.html`'deki `wrap bar`'ı `wrap fam-row` yap, yoksa başlık çubuğu dağılır.
 - Masaüstü (1280) ve 375px'te yerel önizlemeyle bakıldı: yatay kaydırma yok, şerit ile
   başlık çubuğu çakışmıyor, aprsagent.com ile yan yana aynı aile görünüyor.
+- **Yayında (2026-10-09 22:03 UTC, elle tetiklenen koşu #104, `1ce8506`):** canlıda
+  `family.css`, logo, `stats.json` ve CSV'ler 200; sayfa yeni temada, sayılar ve tarih geliyor.
 
 ## Ölçülen sonuç (2026-09-07 verisi)
 
