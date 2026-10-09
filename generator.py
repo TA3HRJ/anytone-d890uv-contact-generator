@@ -16,7 +16,7 @@ DMR_URL = "https://radioid.net/static/user.csv"
 NXDN_URL = "https://radioid.net/static/nxdn.csv"
 
 # Bir önceki başarılı çalışmanın sayıları; kaynak bozulduğunda karşılaştırma tabanı.
-BASELINE_STATS_URL = "https://ta3hrj.github.io/anytone-d890uv-contact-generator/stats.json"
+BASELINE_STATS_URL = "https://contacts.aprsagent.com/stats.json"
 
 DOWNLOAD_TIMEOUT = 120
 BASELINE_TIMEOUT = 30

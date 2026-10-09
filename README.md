@@ -4,7 +4,7 @@ Generate screen-character-compliant DMR and NXDN contact list CSV files for AnyT
 
 ## Download
 
-**→ [ta3hrj.github.io/anytone-d890uv-contact-generator](https://ta3hrj.github.io/anytone-d890uv-contact-generator/)**
+**→ [contacts.aprsagent.com](https://contacts.aprsagent.com/)**
 
 Ready-to-import CSV files, regenerated automatically once a day. No need to run
 anything yourself — just pick your region and import into the CPS.
@@ -47,7 +47,7 @@ pip install -r requirements.txt
 ## Usage
 
 Only needed if you want to build the lists yourself — otherwise grab them from the
-[download page](https://ta3hrj.github.io/anytone-d890uv-contact-generator/).
+[download page](https://contacts.aprsagent.com/).
 
 ```bash
 python generator.py
