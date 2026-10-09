@@ -1,0 +1,123 @@
+/* aprsagent.com site ailesi — ortak değişkenler ve bileşenler. Sürüm 1 (2026-10-09).
+   Kaynak: aprsagent.com tanıtım sayfası. Projeye KOPYALA; uzaktan bağlama.
+   Değer değiştirme: önce _shared/aprsagent-site-standardi/README.md ve bu dosya, sonra siteler. */
+
+:root{
+  /* warm paper, cool technical ink */
+  --bg:#f6f3ea; --bg2:#efebdf; --card:#fdfbf5;
+  --fg:#22201a; --fg2:#635c50;
+  --line:#d9d2c2; --hair:#c6bda8;
+  --accent:#b0413e; --accent2:#24506e; --link:#24506e; --copper:#b57a18;
+  --grid-a:rgba(36,80,110,.085); --grid-b:rgba(36,80,110,.038);
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --r:2px;
+  /* grafik serileri (sıra sabit) */
+  --series-1:#24506e; --series-2:#b0413e; --series-3:#b57a18; --series-4:#3f7d4e;
+  --series-5:#6b4f8a; --series-6:#635c50;
+}
+/* İsteğe bağlı koyu tema: yalnızca koyu teması zaten olan siteler; ana sayfada yok. */
+:root[data-theme="dark"]{
+  --bg:#1b1a16; --bg2:#24221d; --card:#211f1a;
+  --fg:#ece6d8; --fg2:#b3aa98;
+  --line:#3a362e; --hair:#4a453b;
+  --accent:#d0605c; --accent2:#7eaacb; --link:#8fb6d4; --copper:#d39a3a;
+  --grid-a:rgba(126,170,203,.07); --grid-b:rgba(126,170,203,.03);
+  --series-1:#7eaacb; --series-2:#d0605c; --series-3:#d39a3a; --series-4:#6fae7f;
+  --series-5:#a88bc9; --series-6:#b3aa98;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--bg)}
+/* Maidenhead ruling: fine squares with a heavier line every fifth */
+body{margin:0;color:var(--fg);font:16px/1.62 var(--sans);font-variant-numeric:tabular-nums;
+  background:
+   repeating-linear-gradient(0deg,var(--grid-a) 0 1px,transparent 1px 110px),
+   repeating-linear-gradient(90deg,var(--grid-a) 0 1px,transparent 1px 110px),
+   repeating-linear-gradient(0deg,var(--grid-b) 0 1px,transparent 1px 22px),
+   repeating-linear-gradient(90deg,var(--grid-b) 0 1px,transparent 1px 22px),
+   var(--bg)}
+/* one thin airmail rule at the very top */
+body::before{content:"";position:fixed;left:0;right:0;top:0;height:5px;z-index:99;
+  background:repeating-linear-gradient(45deg,#b0413e 0 9px,#f6f3ea 9px 18px,#24506e 18px 27px,#f6f3ea 27px 36px)}
+a{color:var(--link)}
+img{max-width:100%}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+@media (max-width:600px){.wrap{padding:0 16px}}
+
+/* ── başlık çubuğu: ana sayfaya geri bağlantı + site adı ── */
+.fam-bar{border-bottom:1px solid var(--fg);background:var(--bg);position:sticky;top:5px;z-index:10}
+.fam-bar .bar{display:flex;align-items:center;gap:14px;min-height:58px}
+.fam-home{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--fg2);
+  font:600 12px var(--mono);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.fam-home img{width:24px;height:24px;display:block}
+.fam-home:hover{color:var(--accent)}
+.fam-sep{width:1px;height:22px;background:var(--hair)}
+.fam-site{font:700 14px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--fg);
+  text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fam-site span{color:var(--accent)}
+.fam-bar .sp{flex:1}
+.lang{display:flex;border:1px solid var(--fg);overflow:hidden}
+.lang button{border:0;background:transparent;color:var(--fg2);font:12px var(--mono);
+  padding:5px 11px;cursor:pointer;letter-spacing:.06em}
+.lang button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.ghl{color:var(--fg2);text-decoration:none;font:12px var(--mono);letter-spacing:.06em;white-space:nowrap}
+.ghl:hover{color:var(--fg)}
+@media (max-width:600px){.fam-home .t{display:none}.fam-bar .bar{gap:10px}}
+
+/* ── başlıklar ve bölümler ── */
+h1{font-size:clamp(29px,4.5vw,47px);line-height:1.13;letter-spacing:-.025em;margin:0 0 18px;font-weight:700}
+.lede{font-size:clamp(16px,2vw,19px);color:var(--fg2);max-width:56ch;margin:0 0 28px}
+section{padding:56px 0;border-top:1px solid var(--hair)}
+h2{font:700 clamp(12px,1.5vw,14px) var(--mono);letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px;color:var(--fg)}
+.sub{color:var(--fg2);margin:0 0 30px;max-width:62ch;font-size:17px}
+@media (max-width:820px){section{padding:42px 0}}
+
+/* ── düğmeler ── */
+.btn{display:inline-block;padding:12px 22px;text-decoration:none;font:600 13px var(--mono);
+  letter-spacing:.06em;text-transform:uppercase;border:1px solid transparent;border-radius:var(--r);cursor:pointer}
+.btn.p{background:var(--accent);color:#fdfbf5}
+.btn.p:hover{filter:brightness(1.07)}
+.btn.s{border-color:var(--fg);color:var(--fg);background:transparent}
+.btn.s:hover{background:var(--bg2)}
+
+/* ── ortak kenarlı tablo (kart yerine) ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0;
+  border:1px solid var(--line);border-bottom:0;background:var(--card)}
+.f{padding:22px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.f h3{margin:0 0 7px;font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg)}
+.f p{margin:0;color:var(--fg2);font-size:14.5px;line-height:1.55}
+.f .art{height:108px;margin:0 0 16px;background:var(--bg2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.f .art svg{width:100%;height:100%;max-width:320px;display:block}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+
+/* ── anahtar–değer listesi ── */
+.kv{margin:22px 0 0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.kv li{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:16px;font-size:15px}
+.kv b{min-width:132px;color:var(--fg2);font:600 11px var(--mono);letter-spacing:.11em;text-transform:uppercase;padding-top:4px}
+code{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:1px 6px;font:.92em var(--mono)}
+
+/* ── uyarı kutusu ── */
+.warn{margin-top:30px;border:1px solid var(--line);border-left:3px solid var(--accent);
+  background:var(--card);padding:20px 22px;border-radius:var(--r)}
+.warn h3{margin:0 0 10px;font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.warn p{margin:0 0 10px;font-size:14.5px;line-height:1.55;color:var(--fg2)}
+
+/* ── yasal bölüm (#legal) ── */
+.legal{font-size:14.5px;line-height:1.6;color:var(--fg2);max-width:78ch}
+.legal h3{font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg);margin:22px 0 8px}
+.legal ul{padding-left:20px;margin:6px 0}
+.legal li+li{margin-top:4px}
+sup.tm{font-size:.55em;font-weight:400;margin-left:1px;line-height:0}
+
+/* ── alt bilgi ── */
+.fam-foot{border-top:1px solid var(--fg);padding:26px 0 46px;color:var(--fg2);font:12px var(--mono);letter-spacing:.05em;margin-top:40px}
+.fam-foot a{color:var(--fg2)}
+.fam-foot a:hover{color:var(--accent)}
+.fam-tools{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.fam-tools b{color:var(--fg);font-weight:700;text-transform:uppercase;letter-spacing:.12em}
+.fam-tools a[aria-current="page"]{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--accent)}
+.fam-line{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.fam-legal{margin:12px 0 0;font:12.5px/1.5 var(--sans);letter-spacing:0;max-width:78ch}
+[hidden]{display:none !important}

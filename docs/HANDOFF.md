@@ -1,24 +1,23 @@
 # HANDOFF
 
-Son güncelleme: 2026-09-24
+Son güncelleme: 2026-10-10
 
 ## Durum
 
-Üretim çalışıyor ve sağlıklı. Her gün radioid.net'ten altı CSV üretilip GitHub Pages'e
-yayınlanıyor (kesin saat yok, bkz. 8. iş); iş başarısız olursa `uretim-hatasi` etiketiyle
-issue açılıyor. Bozuk indirme mevcut çıktının üzerine yazamıyor. 108 test `generator.py`'den
-önce koşuyor.
+Üretim çalışıyor ve sağlıklı. Her gün radioid.net'ten altı CSV üretilip
+https://contacts.aprsagent.com adresine (GitHub Pages) yayınlanıyor (kesin saat yok, bkz. 8. iş);
+iş başarısız olursa `uretim-hatasi` etiketiyle issue açılıyor. Bozuk indirme mevcut çıktının
+üzerine yazamıyor. 109 test `generator.py`'den önce koşuyor.
 
 Açık listede **yapılmayı bekleyen iş yok** — kalan iki madde de bilinçli kararla beklemede
 (aşağıda gerekçeleriyle). Yeni bir yön belirlenmeden buradan devam edilecek bir şey yok.
 
-**Takip (2026-09-25 ve sonrası):** 8. ve 9. işin commit'leri (`56958de`, `b3ce04a`)
-2026-09-24 yayınından *sonra* push'landı — o günün koşusu `a127781` ile yapıldı. Push
-workflow'u tetiklemiyor (yalnızca cron + `workflow_dispatch`), yani yeni kutulama kuralı ve
-`23 5` cron'u üretimde ilk kez 25 Eylül'de koşacak. Yerelde önceden doğrulandı: 108 test
-yeşil, `generator.py` canlı veride hatasız, sayılar yayındakiyle birebir, `Rewrote 12,538`.
-Bakılacaklar: 25 Eylül koşusu yeşil mi, `head_sha` `b3ce04a` mı; bir hafta boyunca
-`run_started_at` eski 10:20-12:20 bandından erkene çekildi mi.
+**8. ve 9. işin üretimdeki sonucu (2026-10-10'da ölçüldü):** 2026-09-25'ten 2026-10-09'a
+15 zamanlanmış koşunun hepsi yeşil, hepsi yeni kodla (`1479fb8`), açık issue yok. 2026-10-09
+yayını: DMR 314.668 / 115.186 / 8.518, NXDN 18.035 / 6.245 / 667.
+**Cron kaydırması gecikmeyi azaltmadı:** `23 5` ile koşular 09:56-12:22 UTC arasında başladı
+(eski `0 6` ile 10:20-12:20). GitHub zamanlanmış işleri 4,5-7 saat erteliyor; dakika seçimi
+fark etmiyor. Sayfa kesin saat vaat etmediği için sorun değil, yeniden denemeye gerek yok.
 
 Bu makinede `gh` yok; durum GitHub REST API'sinden anonim okunuyor:
 `Invoke-RestMethod https://api.github.com/repos/TA3HRJ/anytone-d890uv-contact-generator/actions/runs?per_page=10`.
@@ -218,6 +217,30 @@ listesi var (`LOWERCASE_CONNECTORS`: upon, under, super, della/delle/degli…) �
 **Kalan, bilerek bırakılan:** karışık alandaki 3 harfli küçük kelimeler (`Castel san
 Giorgio`, `Paris Sv7 lpk`) ve büyük harfle yazılmış yer adları (`PUGET sur Argens`) —
 ikisini de bağlaçtan/kısaltmadan ayırt etmek elle tutulan bir liste gerektirir.
+
+### 10. Sayfa aprsagent.com ailesinin temasına geçti (2026-10-10)
+
+Site artık `*.aprsagent.com` ailesinin parçası. Ortak standart depo dışında:
+`C:\Claude Projects\_shared\aprsagent-site-standardi\` (README, `family.css`, `snippets.html`).
+Ana sayfanın görünümü değişirse önce orası, sonra bu depo güncellenir.
+
+- `family.css` ve `assets/aprsagent-mark.svg` standarttan **kopyalandı**, uzaktan bağlanmıyor.
+  Sayfaya özgü stil (tablo, adım listesi) `index.html` içinde ve yalnızca family.css
+  değişkenlerini kullanıyor.
+- Başlık çubuğunda ana sayfaya geri bağlantı, altta "Ham radio tools" satırı,
+  `#legal` bölümü (ticari markalar + sorumluluk reddi + radioid.net/kişisel veri maddesi),
+  README'de "Trademarks and disclaimer". AnyTone/D890UV için ® konmadı: sahibinin kendi
+  belgesinde ® kanıtı yok, genel "olabilir" cümlesi kapsıyor. Site tek dilli kaldı (İngilizce).
+- Workflow artık `family.css` ve `assets/`'i de `_site`'a kopyalıyor. **Tuzak:** sayfaya yeni
+  yerel dosya eklenip workflow'a eklenmezse site temasız yayınlanır; bunu
+  `test_workflow_publishes_every_local_file_the_page_loads` yakalıyor (kopyalama satırı
+  silinerek denendi, test kaldı).
+- **Standarttaki hata:** `snippets.html` §3 `<div class="wrap legal">` veriyor. `.legal`'in
+  `max-width:78ch` değeri `.wrap`'ın genişliğini ezip `margin:auto` ile kutuyu ortaya
+  kaydırıyor. Burada `<div class="wrap"><div class="legal">` ile çözüldü; standardın kendisi
+  düzeltilmedi, aynı kalıbı kullanan diğer siteler etkilenir.
+- Masaüstü (1280) ve 375px'te yerel önizlemeyle bakıldı: yatay kaydırma yok, şerit ile
+  başlık çubuğu çakışmıyor, aprsagent.com ile yan yana aynı aile görünüyor.
 
 ## Ölçülen sonuç (2026-09-07 verisi)
 

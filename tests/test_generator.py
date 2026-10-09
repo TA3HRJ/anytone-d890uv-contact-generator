@@ -8,6 +8,7 @@ Bu üçü kırılırsa telsiz tarafında sessizce bozuk çıktı oluşur:
 from __future__ import annotations
 
 import csv
+import re
 import sys
 from pathlib import Path
 
@@ -359,6 +360,22 @@ def test_page_has_no_build_time_placeholders():
     # Tarih artık stats.json'dan geliyor; build'de sed ile doldurulan yer kalmamalı
     html = INDEX_HTML.read_text(encoding="utf-8")
     assert "{{" not in html, "sayfada doldurulmamis yer tutucu kalmis"
+
+
+def test_workflow_publishes_every_local_file_the_page_loads():
+    # Sayfanın yüklediği CSS/görsel _site'a kopyalanmazsa site temasız yayınlanır.
+    # CSV'ler ve stats.json output/'tan geliyor, depoda değil.
+    root = Path(__file__).resolve().parent.parent
+    html = INDEX_HTML.read_text(encoding="utf-8")
+    workflow = (root / ".github" / "workflows" / "generate.yml").read_text(encoding="utf-8")
+    local = [ref for ref in re.findall(r'(?:href|src)="([^"#]+)"', html)
+             if "://" not in ref and ref not in ("./", "stats.json")
+             and not ref.endswith(".csv")]
+    assert local, "sayfada yerel dosya bulunamadi; desen bozulmus olabilir"
+    for ref in local:
+        assert (root / ref).is_file(), f"{ref} depoda yok"
+        top = ref.split("/")[0]
+        assert top in workflow, f"{ref} workflow'da _site'a kopyalanmiyor"
 
 
 def test_workflow_does_not_patch_the_page():

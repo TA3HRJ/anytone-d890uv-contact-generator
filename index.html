@@ -4,116 +4,188 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AnyTone D890UV Contact List Download</title>
+    <meta name="description" content="DMR and NXDN contact lists for the AnyTone D890UV and D878UV, built daily from radioid.net and ready to import into the CPS.">
+    <link rel="stylesheet" href="family.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-        .container { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
-        h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-        .subtitle { color: #666; margin-bottom: 2rem; }
-        .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
-        .card h2 { font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 2px solid #0066cc; padding-bottom: 0.5rem; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid #eee; }
-        th { font-weight: 600; color: #444; font-size: 0.85rem; text-transform: uppercase; }
-        td.count { text-align: right; font-variant-numeric: tabular-nums; color: #555; }
-        a.dl { color: #0066cc; font-weight: 600; text-decoration: none; }
-        a.dl:hover { text-decoration: underline; }
-        .info { background: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 6px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.9rem; }
-        .footer { text-align: center; color: #888; font-size: 0.85rem; margin-top: 2rem; }
-        .badge { display: inline-block; background: #e8f5e9; color: #2e7d32; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+        /* Yalnızca bu sayfaya özgü parçalar; renk ve yazı family.css değişkenlerinden. */
+        .hero { padding-top: 56px; padding-bottom: 42px; }
+        .hero .kv { max-width: 640px; }
+        .lists { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); }
+        .lists th { font: 600 11px var(--mono); letter-spacing: .11em; text-transform: uppercase; color: var(--fg2);
+                    text-align: left; padding: 10px 16px; background: var(--bg2); border-bottom: 1px solid var(--fg); }
+        .lists td { padding: 12px 16px; border-bottom: 1px solid var(--line); }
+        .lists th.num, .lists td.count { text-align: right; }
+        .lists td.count { font-family: var(--mono); }
+        .lists td.dl { width: 1%; text-align: right; white-space: nowrap; }
+        .btn.sm { padding: 7px 14px; font-size: 12px; }
+        .steps { counter-reset: step; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); max-width: 640px; }
+        .steps li { counter-increment: step; display: flex; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+        .steps li::before { content: counter(step, decimal-leading-zero); font: 600 12px var(--mono); color: var(--accent); padding-top: 3px; }
+        .fam-line .sp { flex: 1; }
+        .legal h2:not(:first-child) { margin-top: 30px; }
+        @media (max-width: 600px) {
+            .hero { padding-top: 40px; padding-bottom: 32px; }
+            .lists th, .lists td { padding-left: 10px; padding-right: 10px; }
+            .kv li { flex-direction: column; gap: 2px; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>AnyTone D890UV Contact List Download</h1>
-        <p class="subtitle">Screen-character-compliant DMR &amp; NXDN contact lists generated from <a href="https://radioid.net">radioid.net</a></p>
+<header class="fam-bar">
+    <div class="wrap bar">
+        <a class="fam-home" href="https://aprsagent.com/#tools" title="aprsagent.com — Ham radio tools">
+            <img src="assets/aprsagent-mark.svg" alt=""><span class="t">aprsagent.com</span>
+        </a>
+        <span class="fam-sep" aria-hidden="true"></span>
+        <a class="fam-site" href="./">CONTACTS</a>
+        <span class="sp"></span>
+        <a class="ghl" href="https://github.com/TA3HRJ/anytone-d890uv-contact-generator" rel="noopener">GitHub ↗</a>
+    </div>
+</header>
 
-        <div class="info">
-            All non-ASCII characters (Turkish, German, Cyrillic, CJK, etc.) are transliterated to ASCII
-            so they display correctly on the radio screen. Names are truncated to 16 characters.
-            Lists are regenerated once a day; the time of the last run is shown at the bottom of the page.
-        </div>
+<main>
+    <div class="wrap hero">
+        <h1>AnyTone D890UV contact lists</h1>
+        <p class="lede">DMR and NXDN contact lists from radioid.net, ready to import into the AnyTone CPS.</p>
+        <ul class="kv">
+            <li><b>Screen</b><span>Plain ASCII only: Turkish, German, Cyrillic, CJK and other characters are transliterated. Names fit the 16-character display.</span></li>
+            <li><b>Radios</b><span>D890UV, also D878UV</span></li>
+            <li><b>Source</b><span><a href="https://radioid.net/database/dumps">radioid.net</a> database dumps, rebuilt once a day</span></li>
+            <li><b>Last build</b><span id="generated_at">—</span></li>
+        </ul>
+    </div>
 
-        <div class="card">
-            <h2>DMR Contact Lists</h2>
-            <table>
-                <tr><th>Region</th><th>Records</th><th>Download</th></tr>
+    <section id="dmr">
+        <div class="wrap">
+            <h2>DMR contact lists</h2>
+            <p class="sub">CPS: DMR &gt; Digital Contact List</p>
+            <table class="lists">
+                <tr><th>Region</th><th class="num">Records</th><th><span hidden>Download</span></th></tr>
                 <tr>
                     <td>Turkey</td>
                     <td class="count" id="dmr_turkey">-</td>
-                    <td><a class="dl" href="DMR%20Digital%20Contact%20List%20-%20Turkey.csv" download>Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="DMR%20Digital%20Contact%20List%20-%20Turkey.csv" download aria-label="Download DMR Turkey CSV">Download</a></td>
                 </tr>
                 <tr>
                     <td>Europe</td>
                     <td class="count" id="dmr_europe">-</td>
-                    <td><a class="dl" href="DMR%20Digital%20Contact%20List%20-%20Europe.csv" download>Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="DMR%20Digital%20Contact%20List%20-%20Europe.csv" download aria-label="Download DMR Europe CSV">Download</a></td>
                 </tr>
                 <tr>
                     <td>World</td>
                     <td class="count" id="dmr_world">-</td>
-                    <td><a class="dl" href="DMR%20Digital%20Contact%20List%20-%20World.csv" download>Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="DMR%20Digital%20Contact%20List%20-%20World.csv" download aria-label="Download DMR World CSV">Download</a></td>
                 </tr>
             </table>
         </div>
+    </section>
 
-        <div class="card">
-            <h2>NXDN Contact Lists</h2>
-            <table>
-                <tr><th>Region</th><th>Records</th><th>Download</th></tr>
+    <section id="nxdn">
+        <div class="wrap">
+            <h2>NXDN contact lists</h2>
+            <p class="sub">CPS: NX &gt; NX Digital Contact List</p>
+            <table class="lists">
+                <tr><th>Region</th><th class="num">Records</th><th><span hidden>Download</span></th></tr>
                 <tr>
                     <td>Turkey</td>
                     <td class="count" id="nxdn_turkey">-</td>
-                    <td><a class="dl" href="NX%20Digital%20Contact%20List%20-%20Turkey.csv" download>Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20Turkey.csv" download aria-label="Download NXDN Turkey CSV">Download</a></td>
                 </tr>
                 <tr>
                     <td>Europe</td>
                     <td class="count" id="nxdn_europe">-</td>
-                    <td><a class="dl" href="NX%20Digital%20Contact%20List%20-%20Europe.csv" download>Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20Europe.csv" download aria-label="Download NXDN Europe CSV">Download</a></td>
                 </tr>
                 <tr>
                     <td>World</td>
                     <td class="count" id="nxdn_world">-</td>
-                    <td><a class="dl" href="NX%20Digital%20Contact%20List%20-%20World.csv" download>Download</a></td>
+                    <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20World.csv" download aria-label="Download NXDN World CSV">Download</a></td>
                 </tr>
             </table>
         </div>
+    </section>
 
-        <div class="card">
-            <h2>How to Import</h2>
-            <ol style="padding-left: 1.2rem;">
-                <li>Download the CSV file for your region</li>
-                <li>Open AnyTone CPS software</li>
-                <li>For DMR: go to <strong>DMR &gt; Digital Contact List</strong></li>
-                <li>For NXDN: go to <strong>NX &gt; NX Digital Contact List</strong></li>
-                <li>Use <strong>Tool &gt; Import</strong> and select the CSV file</li>
-                <li>Write the codeplug to the radio</li>
+    <section id="import">
+        <div class="wrap">
+            <h2>How to import</h2>
+            <ol class="steps">
+                <li><span>Download the CSV file for your region.</span></li>
+                <li><span>Open the AnyTone CPS software.</span></li>
+                <li><span>For DMR go to <strong>DMR &gt; Digital Contact List</strong>; for NXDN go to <strong>NX &gt; NX Digital Contact List</strong>.</span></li>
+                <li><span>Use <strong>Tool &gt; Import</strong> and select the CSV file.</span></li>
+                <li><span>Write the codeplug to the radio.</span></li>
             </ol>
         </div>
+    </section>
 
-        <p class="footer">
-            Last generated: <span class="badge" id="generated_at">—</span><br>
-            <a href="https://github.com/TA3HRJ/anytone-d890uv-contact-generator">Source code on GitHub</a>
-            &middot; TA3HX
-        </p>
+    <section id="legal">
+        <div class="wrap"><div class="legal">
+            <h2>Trademarks</h2>
+            <p>Brand, product, organisation and company names on this site are trademarks or registered
+                trademarks of their respective owners and are used only for identification.</p>
+            <p>APRS<sup class="tm">®</sup> is a registered trademark of APRS Software and Bob Bruninga, WB4APR (SK),
+                who created APRS and gave the hobby the protocol.</p>
+            <p>AnyTone, D890UV and D878UV may also be trademarks or registered trademarks of their owner. This
+                project is not affiliated with, endorsed, approved or sponsored by any organisation or manufacturer
+                named, including radioid.net. The licence grants no rights in these names.</p>
+
+            <h2>Disclaimer</h2>
+            <ul>
+                <li>The lists are compiled automatically from radioid.net's public database dumps. Names are
+                    transliterated to ASCII and shortened to 16 characters, so they can differ from the source,
+                    and the source may change without notice.</li>
+                <li>Accuracy and currency depend on radioid.net. Its terms govern the personal data in these
+                    lists; the lists are for amateur radio use only. AnyTone and D890UV are trademarks of their
+                    owner.</li>
+                <li>External links lead to third-party sites; this site is not responsible for their content.</li>
+                <li>Information is provided "as is", without any warranty of accuracy, completeness or fitness for
+                    a particular purpose, and no liability is accepted for any damage arising from its use.</li>
+            </ul>
+        </div></div>
+    </section>
+</main>
+
+<footer class="fam-foot">
+    <div class="wrap">
+        <nav class="fam-tools" aria-label="Ham radio tools">
+            <b>Ham radio tools</b>
+            <a href="https://aprsagent.com/">aprsagent.com</a>
+            <a href="https://coax.aprsagent.com/">Coax cables</a>
+            <a href="https://repeaters.aprsagent.com/">Repeaters</a>
+            <a href="https://sinav.aprsagent.com/">Exam prep</a>
+            <a href="https://contacts.aprsagent.com/" aria-current="page">AnyTone contacts</a>
+        </nav>
+        <div class="fam-line">
+            <span>Code MIT · data from <a href="https://radioid.net/">radioid.net</a></span>
+            <a href="#import">How to import</a>
+            <a href="https://github.com/TA3HRJ/anytone-d890uv-contact-generator" rel="noopener">GitHub</a>
+            <span class="sp"></span>
+            <span>Operated by TA3HX</span>
+        </div>
+        <p class="fam-legal">Brand and product names belong to their owners; this site is not affiliated with any
+            organisation or manufacturer. Information only, without warranty.
+            <a href="#legal">Trademarks and disclaimer</a></p>
     </div>
-    <script>
-        // Tarih de sayılar da aynı dosyadan geliyor, bu yüzden ayrışamazlar.
-        // Anahtarlar tek tek okunuyor: stats.json'a yeni bir alan eklendiğinde
-        // karşılığı olmayan bir id aranıp sayfa boş kalmasın.
-        const COUNT_KEYS = ["dmr_turkey", "dmr_europe", "dmr_world",
-                            "nxdn_turkey", "nxdn_europe", "nxdn_world"];
+</footer>
 
-        fetch("stats.json", { cache: "no-cache" })
-            .then(r => r.json())
-            .then(s => {
-                for (const key of COUNT_KEYS) {
-                    const cell = document.getElementById(key);
-                    if (cell && typeof s[key] === "number")
-                        cell.textContent = s[key].toLocaleString();
-                }
-                const stamp = document.getElementById("generated_at");
-                if (stamp && s.generated_at) stamp.textContent = s.generated_at;
-            });
-    </script>
+<script>
+    // Tarih de sayılar da aynı dosyadan geliyor, bu yüzden ayrışamazlar.
+    // Anahtarlar tek tek okunuyor: stats.json'a yeni bir alan eklendiğinde
+    // karşılığı olmayan bir id aranıp sayfa boş kalmasın.
+    const COUNT_KEYS = ["dmr_turkey", "dmr_europe", "dmr_world",
+                        "nxdn_turkey", "nxdn_europe", "nxdn_world"];
+
+    fetch("stats.json", { cache: "no-cache" })
+        .then(r => r.json())
+        .then(s => {
+            for (const key of COUNT_KEYS) {
+                const cell = document.getElementById(key);
+                if (cell && typeof s[key] === "number")
+                    cell.textContent = s[key].toLocaleString();
+            }
+            const stamp = document.getElementById("generated_at");
+            if (stamp && s.generated_at) stamp.textContent = s.generated_at;
+        });
+</script>
 </body>
 </html>

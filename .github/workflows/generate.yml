@@ -45,7 +45,8 @@ jobs:
         run: |
           mkdir -p _site
           cp output/*.csv output/stats.json _site/
-          cp index.html _site/
+          cp index.html family.css _site/
+          cp -r assets _site/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

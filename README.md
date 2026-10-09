@@ -97,7 +97,26 @@ All contact data is sourced from [radioid.net](https://radioid.net/database/dump
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) file.
+Code: MIT License — see [LICENSE](LICENSE) file. The contact data belongs to radioid.net and is
+subject to its terms. The licence grants no rights in the trademarks named in this project.
+
+## Trademarks and disclaimer
+
+Brand, product, organisation and company names in this project are trademarks or registered
+trademarks of their respective owners and are used only for identification. APRS® is a
+registered trademark of APRS Software and Bob Bruninga, WB4APR (SK). AnyTone, D890UV and D878UV
+may also be trademarks or registered trademarks of their owner. This project is not affiliated
+with, endorsed, approved or sponsored by any organisation or manufacturer named, including
+radioid.net.
+
+- The lists are compiled automatically from radioid.net's public database dumps. Names are
+  transliterated to ASCII and shortened to 16 characters, so they can differ from the source,
+  and the source may change without notice.
+- Accuracy and currency depend on radioid.net. Its terms govern the personal data in these
+  lists; the lists are for amateur radio use only.
+- External links lead to third-party sites; this project is not responsible for their content.
+- Everything is provided "as is", without any warranty of accuracy, completeness or fitness for
+  a particular purpose, and no liability is accepted for any damage arising from its use.
 
 ## Credits
 
