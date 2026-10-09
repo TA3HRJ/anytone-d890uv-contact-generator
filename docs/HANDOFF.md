@@ -237,8 +237,11 @@ Ana sayfanın görünümü değişirse önce orası, sonra bu depo güncellenir.
   silinerek denendi, test kaldı).
 - **Standarttaki hata:** `snippets.html` §3 `<div class="wrap legal">` veriyor. `.legal`'in
   `max-width:78ch` değeri `.wrap`'ın genişliğini ezip `margin:auto` ile kutuyu ortaya
-  kaydırıyor. Burada `<div class="wrap"><div class="legal">` ile çözüldü; standardın kendisi
-  düzeltilmedi, aynı kalıbı kullanan diğer siteler etkilenir.
+  kaydırıyor. Burada önce `<div class="wrap"><div class="legal">` ile çözüldü, sonra
+  standardın kendisi düzeltildi (sürüm 1.1): `max-width` `.legal`'den çocuklarına
+  (`.legal>*`) taşındı, iki kalıp da doğru hizalanıyor. Bu depodaki `family.css` 1.1'e
+  eşitlendi. `turkey-repeaters/docs/index.html` eski kalıbı kullanıyor; o site yeni
+  `family.css`'i kopyalayınca düzelir.
 - Masaüstü (1280) ve 375px'te yerel önizlemeyle bakıldı: yatay kaydırma yok, şerit ile
   başlık çubuğu çakışmıyor, aprsagent.com ile yan yana aynı aile görünüyor.
 

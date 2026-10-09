@@ -1,4 +1,4 @@
-/* aprsagent.com site ailesi — ortak değişkenler ve bileşenler. Sürüm 1 (2026-10-09).
+/* aprsagent.com site ailesi — ortak değişkenler ve bileşenler. Sürüm 1.1 (2026-10-10).
    Kaynak: aprsagent.com tanıtım sayfası. Projeye KOPYALA; uzaktan bağlama.
    Değer değiştirme: önce _shared/aprsagent-site-standardi/README.md ve bu dosya, sonra siteler. */
 
@@ -105,7 +105,10 @@ code{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);p
 .warn p{margin:0 0 10px;font-size:14.5px;line-height:1.55;color:var(--fg2)}
 
 /* ── yasal bölüm (#legal) ── */
-.legal{font-size:14.5px;line-height:1.6;color:var(--fg2);max-width:78ch}
+/* Satır uzunluğu çocuklarda sınırlanıyor, kutunun kendisinde değil: aynı öğe .wrap da
+   taşıdığında (<div class="wrap legal">) max-width .wrap'ı ezip bölümü ortaya kaydırıyordu. */
+.legal{font-size:14.5px;line-height:1.6;color:var(--fg2)}
+.legal>*{max-width:78ch}
 .legal h3{font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg);margin:22px 0 8px}
 .legal ul{padding-left:20px;margin:6px 0}
 .legal li+li{margin-top:4px}
