@@ -69,7 +69,7 @@ python -m pytest tests -q
 The tests cover the three things that break silently on the radio: the 16-character display
 limit, the exact CPS column layout, and the record-count guard.
 
-### Importing to D890UV
+## Importing to D890UV
 
 1. Open AnyTone CPS software
 2. Go to **DMR > Digital Contact List**
