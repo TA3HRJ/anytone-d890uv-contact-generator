@@ -290,9 +290,11 @@ ASCII dışı karakter, 16'yı aşan ad, boş ad, boşluk/satır sonu sorunu, s�
 - **Koyu temada tarayıcı çubuğu açık kalıyordu.** Baştaki betik `data-theme="dark"`'ı
   koyuyor ama `theme-color` meta'sı `#f6f3ea` kalıyordu; ancak düğmeye basınca düzeliyordu.
   Artık betik koyu seçimde meta'yı `#1b1a16` yapıyor (CSS henüz yüklü olmadığı için değer
-  family.css'ten elle kopya; koyu `--bg` değişirse burası da değişmeli). **Aynı hata ortak
-  standartta (snippets §1b) ve onu kopyalayan bütün aile sitelerinde var**; standart ve
-  diğer siteler düzeltilmedi, kullanıcıya bildirildi.
+  family.css'ten elle kopya; koyu `--bg` değişirse burası da değişmeli). Hata ortak
+  standarttan geliyordu: 2026-10-23'te standart 1.4'te düzeltildi (snippets §1b, README §6).
+  coax'ta zaten vardı (canlıda ölçüldü). repeaters'ta o depoda başka bir oturum aynı dosyayı
+  düzenlediği için satır o oturuma iletildi, kendi commit'iyle ekleyecek. Sınav sitesine
+  kullanıcının isteğiyle dokunulmadı.
 
 ## Ölçülen sonuç (2026-09-07 verisi)
 
