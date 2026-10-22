@@ -113,6 +113,10 @@ def truncate_name(name: str) -> str:
     if len(name) <= NAME_MAX_LEN:
         return name
     truncated = name[:NAME_MAX_LEN]
+    # Kesim tam kelime sınırına düştüyse son kelime sığmış demektir; geriye gidip onu
+    # atmak "Vermilion County War Museum"u "Vermilion" yapıyordu (2026-10-22: 134 kayıt).
+    if name[NAME_MAX_LEN] == " ":
+        return truncated.rstrip()
     last_space = truncated.rfind(" ")
     if last_space > NAME_MAX_LEN // 2:
         return truncated[:last_space]

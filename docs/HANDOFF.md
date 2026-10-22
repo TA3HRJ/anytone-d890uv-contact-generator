@@ -1,13 +1,13 @@
 # HANDOFF
 
-Son güncelleme: 2026-10-10
+Son güncelleme: 2026-10-22
 
 ## Durum
 
 Üretim çalışıyor ve sağlıklı. Her gün radioid.net'ten altı CSV üretilip
 https://contacts.aprsagent.com adresine (GitHub Pages) yayınlanıyor (kesin saat yok, bkz. 8. iş);
 iş başarısız olursa `uretim-hatasi` etiketiyle issue açılıyor. Bozuk indirme mevcut çıktının
-üzerine yazamıyor. 109 test `generator.py`'den önce koşuyor.
+üzerine yazamıyor. 111 test `generator.py`'den önce koşuyor.
 
 Açık listede **yapılmayı bekleyen iş yok** — kalan iki madde de bilinçli kararla beklemede
 (aşağıda gerekçeleriyle). Yeni bir yön belirlenmeden buradan devam edilecek bir şey yok.
@@ -274,6 +274,25 @@ Kullanıcı istedi, varsayılanı **her zaman TR** seçti (tarayıcı diline bak
   test kaldı ve eksik anahtarı adıyla gösterdi).
 - Yerelde doğrulandı: boş tarayıcıda TR açılıyor, EN'ye geçiş ve yenilemeden sonra hatırlama
   çalışıyor, 375px'te tema + EN/TR + GitHub sığıyor, yatay kaydırma yok.
+
+### 12. Hata taraması (2026-10-22)
+
+Üretim: 2026-10-11'den beri bütün zamanlanmış koşular yeşil, açık issue yok. 2026-10-22
+verisiyle yerelde üretilip altı CSV ve ham döküm tarandı (betik depo dışında, ölçüm amaçlı):
+ASCII dışı karakter, 16'yı aşan ad, boş ad, boşluk/satır sonu sorunu, sütun sayısı hatası
+**yok**; bütün DMR ID'leri 7 hane, çözülemeyen bayt yok. Bulunan iki hata düzeltildi:
+
+- **`truncate_name` sığan kelimeyi atıyordu.** 16. karakterden sonra boşluk gelince kesilen
+  parça zaten tam kelimelerden oluşuyor, ama kod yine son boşluğa geri gidiyordu:
+  "Vermilion County War Museum" -> "Vermilion" (doğrusu "Vermilion County"). 134 kayıt;
+  düzeltmeden sonra 0. Kayıt sayıları değişmedi. Kelime ortasından kesilen 629 kayıt aynı
+  kaldı — o davranış (son boşluk 8. karakterden önceyse sert kes) bilinçli.
+- **Koyu temada tarayıcı çubuğu açık kalıyordu.** Baştaki betik `data-theme="dark"`'ı
+  koyuyor ama `theme-color` meta'sı `#f6f3ea` kalıyordu; ancak düğmeye basınca düzeliyordu.
+  Artık betik koyu seçimde meta'yı `#1b1a16` yapıyor (CSS henüz yüklü olmadığı için değer
+  family.css'ten elle kopya; koyu `--bg` değişirse burası da değişmeli). **Aynı hata ortak
+  standartta (snippets §1b) ve onu kopyalayan bütün aile sitelerinde var**; standart ve
+  diğer siteler düzeltilmedi, kullanıcıya bildirildi.
 
 ## Ölçülen sonuç (2026-09-07 verisi)
 

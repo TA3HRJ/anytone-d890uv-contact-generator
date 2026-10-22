@@ -35,6 +35,12 @@ def test_long_name_cut_at_word_boundary():
     assert g.truncate_name("Mehmet Emin Karaoglu") == "Mehmet Emin"
 
 
+def test_word_ending_exactly_at_limit_is_kept():
+    # 16. karakterden sonra boşluk: son kelime tam sığıyor, atılmamalı
+    assert g.truncate_name("Vermilion County War Museum") == "Vermilion County"
+    assert g.truncate_name("Associazione ARI Sezione di Fano") == "Associazione ARI"
+
+
 def test_single_long_word_cut_hard():
     # Tek kelimede kesilecek boşluk yok, sert kesiliyor
     assert g.truncate_name("Abdurrahmanoglullari") == "Abdurrahmanoglul"

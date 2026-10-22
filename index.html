@@ -6,7 +6,10 @@
 <meta name="theme-color" content="#f6f3ea">
 <script>(function(){var t=null,l=null;try{t=localStorage.getItem("theme");l=localStorage.getItem("lang")}catch(e){}
 document.documentElement.dataset.theme=t==="dark"?"dark":"light";
-document.documentElement.lang=l==="en"?"en":"tr";})();</script>
+document.documentElement.lang=l==="en"?"en":"tr";
+/* koyu seçmiş ziyaretçide tarayıcı çubuğu da koyu açılsın; CSS henüz yüklenmediği için
+   değer family.css [data-theme="dark"] --bg'den elle kopya */
+var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.content="#1b1a16";})();</script>
     <title>AnyTone D890UV kişi listeleri</title>
     <meta name="description" content="AnyTone D890UV ve D878UV için radioid.net'ten her gün üretilen, CPS'e aktarılmaya hazır DMR ve NXDN kişi listeleri.">
     <link rel="stylesheet" href="family.css">
