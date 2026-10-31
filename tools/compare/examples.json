@@ -1,0 +1,202 @@
+[
+ {
+  "id_open": "2500",
+  "id_hidden": 3,
+  "cs_open": "R4H",
+  "cs_hidden": 2,
+  "first": "Алексей",
+  "city": "Тольятти",
+  "state": "All Regions",
+  "country": "Russia"
+ },
+ {
+  "id_open": "2500",
+  "id_hidden": 3,
+  "cs_open": "UB3",
+  "cs_hidden": 3,
+  "first": "Валерий",
+  "city": "Орёл",
+  "state": "All Regions",
+  "country": "Russia"
+ },
+ {
+  "id_open": "2570",
+  "id_hidden": 3,
+  "cs_open": "EW8",
+  "cs_hidden": 3,
+  "first": "Евгений",
+  "city": "Гомель",
+  "state": "All Regions",
+  "country": "Belarus"
+ },
+ {
+  "id_open": "4609",
+  "id_hidden": 3,
+  "cs_open": "BI4",
+  "cs_hidden": 3,
+  "first": "发涛",
+  "city": "BinZhou",
+  "state": "Shanghai Shandong Jiangsu",
+  "country": "China"
+ },
+ {
+  "id_open": "4612",
+  "id_hidden": 3,
+  "cs_open": "BG4",
+  "cs_hidden": 3,
+  "first": "金志",
+  "city": "潍坊市",
+  "state": "Shanghai Shandong Jiangsu",
+  "country": "China"
+ },
+ {
+  "id_open": "4501",
+  "id_hidden": 3,
+  "cs_open": "HL4",
+  "cs_hidden": 3,
+  "first": "이정식",
+  "city": "광양시",
+  "state": "Jeonlla Nam Do",
+  "country": "Korea Republic of"
+ },
+ {
+  "id_open": "4501",
+  "id_hidden": 3,
+  "cs_open": "DS1",
+  "cs_hidden": 3,
+  "first": "김대경",
+  "city": "서울특별시",
+  "state": "Seoul",
+  "country": "Korea Republic of"
+ },
+ {
+  "id_open": "2020",
+  "id_hidden": 3,
+  "cs_open": "SY1",
+  "cs_hidden": 3,
+  "first": "Κωνσταντινος",
+  "city": "ΖΩΓΡΑΦΟΥ",
+  "state": "Attiki  Sterea Ellada  Dytiki Ellada",
+  "country": "Greece"
+ },
+ {
+  "id_open": "2020",
+  "id_hidden": 3,
+  "cs_open": "SY9",
+  "cs_hidden": 3,
+  "first": "Νεκταριος",
+  "city": "Ρεθυμνο",
+  "state": "Kriti",
+  "country": "Greece"
+ },
+ {
+  "id_open": "4250",
+  "id_hidden": 3,
+  "cs_open": "4Z9",
+  "cs_hidden": 3,
+  "first": "Claudio",
+  "city": "אילת",
+  "state": "Central",
+  "country": "Israel"
+ },
+ {
+  "id_open": "5201",
+  "id_hidden": 3,
+  "cs_open": "HS5",
+  "cs_hidden": 3,
+  "first": "จักพงศ์",
+  "city": "เมือง",
+  "state": "Chiang Mai",
+  "country": "Thailand"
+ },
+ {
+  "id_open": "2865",
+  "id_hidden": 3,
+  "cs_open": "TA1",
+  "cs_hidden": 3,
+  "first": "İsmet",
+  "city": "İstanbul",
+  "state": "Marmara Region",
+  "country": "Turkiye"
+ },
+ {
+  "id_open": "2866",
+  "id_hidden": 3,
+  "cs_open": "TA2",
+  "cs_hidden": 3,
+  "first": "Saım",
+  "city": "Duzce",
+  "state": "Marmara Region",
+  "country": "Turkiye"
+ },
+ {
+  "id_open": "2630",
+  "id_hidden": 3,
+  "cs_open": "DD4",
+  "cs_hidden": 2,
+  "first": "Jörg",
+  "city": "Karlsruhe",
+  "state": "Baden-Wuerttemberg",
+  "country": "Germany"
+ },
+ {
+  "id_open": "2602",
+  "id_hidden": 3,
+  "cs_open": "SQ9",
+  "cs_hidden": 3,
+  "first": "Sławomir",
+  "city": "Czaslaw",
+  "state": "małopolskie",
+  "country": "Poland"
+ },
+ {
+  "id_open": "2300",
+  "id_hidden": 3,
+  "cs_open": "OK9",
+  "cs_hidden": 3,
+  "first": "František",
+  "city": "Rudice",
+  "state": "Moravian-Silesian Region",
+  "country": "Czech Republic"
+ },
+ {
+  "id_open": "2400",
+  "id_hidden": 3,
+  "cs_open": "SM3",
+  "cs_hidden": 3,
+  "first": "Åke",
+  "city": "Ostersund",
+  "state": "Jamtland",
+  "country": "Sweden"
+ },
+ {
+  "id_open": "2142",
+  "id_hidden": 3,
+  "cs_open": "EA2",
+  "cs_hidden": 3,
+  "first": "Óscar",
+  "city": "TERUEL",
+  "state": "Teruel",
+  "country": "Spain"
+ },
+ {
+  "id_open": "7244",
+  "id_hidden": 3,
+  "cs_open": "PU2",
+  "cs_hidden": 3,
+  "first": "André",
+  "city": "São Paulo",
+  "state": "Sao Paulo",
+  "country": "Brazil"
+ },
+ {
+  "id_open": "7120",
+  "id_hidden": 3,
+  "cs_open": "TI3",
+  "cs_hidden": 3,
+  "first": "JUANCARLOS",
+  "city": "CARTAGO",
+  "state": "Cartago",
+  "country": "Costa Rica"
+ }
+]

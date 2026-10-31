@@ -28,6 +28,11 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
         .steps { counter-reset: step; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); max-width: 640px; }
         .steps li { counter-increment: step; display: flex; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
         .steps li::before { content: counter(step, decimal-leading-zero); font: 600 12px var(--mono); color: var(--accent); padding-top: 3px; }
+        .cmp { margin: 0; border: 1px solid var(--line); background: var(--card); }
+        .cmp img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 420; }
+        .cmp figcaption { display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+                          border-top: 1px solid var(--line); font: 13px var(--mono); color: var(--fg2); }
+        .cmp figcaption .sp { flex: 1; }
         .fam-line .sp { flex: 1; }
         .legal h2:not(:first-child) { margin-top: 30px; }
         @media (max-width: 600px) {
@@ -114,6 +119,23 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
                     <td class="dl"><a class="btn s sm" href="NX%20Digital%20Contact%20List%20-%20World.csv" download data-i="dl" data-i-aria="dlNxWorld" aria-label="NXDN Dünya CSV indir">İndir</a></td>
                 </tr>
             </table>
+        </div>
+    </section>
+
+    <section id="compare">
+        <div class="wrap">
+            <h2 data-i="cmpH">Telsiz ekranında fark</h2>
+            <p class="sub" data-i="cmpSub">Aynı çağrı, iki telsiz: solda radioid.net'in dosyası olduğu gibi, sağda bu liste. Telsiz ASCII dışı harfleri gösteremiyor; ülke de ham dosyada hiç görünmüyor. Radio ID ve çağrı işaretleri gizlendi.</p>
+            <figure class="cmp">
+                <img id="cmp-img" src="assets/compare/01.webp" width="1000" height="420" loading="lazy" alt="">
+                <figcaption>
+                    <button class="btn s sm" type="button" id="cmp-prev" data-i-aria="cmpPrev" aria-label="Önceki örnek">&lsaquo;</button>
+                    <span id="cmp-n">1 / 20</span>
+                    <span id="cmp-c"></span>
+                    <span class="sp"></span>
+                    <button class="btn s sm" type="button" id="cmp-next" data-i-aria="cmpNext" aria-label="Sonraki örnek">&rsaquo;</button>
+                </figcaption>
+            </figure>
         </div>
     </section>
 
@@ -236,7 +258,12 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
             famLicence: 'Kod MIT · veri: <a href="https://radioid.net/">radioid.net</a>',
             famOp: 'İşleten: <a href="https://www.qrz.com/db/TA3HX" rel="noopener">TA3HX</a>',
             famLegal: "Marka ve ürün adları sahiplerinindir; bu site hiçbir kurum ya da üreticiyle bağlantılı değildir. Bilgiler bilgi amaçlıdır, garanti verilmez.",
-            famLegalLink: "Ticari markalar ve sorumluluk reddi"
+            famLegalLink: "Ticari markalar ve sorumluluk reddi",
+            cmpH: "Telsiz ekranında fark",
+            cmpSub: "Aynı çağrı, iki telsiz: solda radioid.net'in dosyası olduğu gibi, sağda bu liste. Telsiz ASCII dışı harfleri gösteremiyor; ülke de ham dosyada hiç görünmüyor. Radio ID ve çağrı işaretleri gizlendi.",
+            cmpPrev: "Önceki örnek",
+            cmpNext: "Sonraki örnek",
+            cmpAlt: "Telsiz ekranı karşılaştırması"
         },
         en: {
             title: "AnyTone D890UV contact lists",
@@ -287,9 +314,49 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
             famLicence: 'Code MIT · data from <a href="https://radioid.net/">radioid.net</a>',
             famOp: 'Operated by <a href="https://www.qrz.com/db/TA3HX" rel="noopener">TA3HX</a>',
             famLegal: "Brand and product names belong to their owners; this site is not affiliated with any organisation or manufacturer. Information only, without warranty.",
-            famLegalLink: "Trademarks and disclaimer"
+            famLegalLink: "Trademarks and disclaimer",
+            cmpH: "On the radio's screen",
+            cmpSub: "The same call on two radios: radioid.net's file as it is on the left, this list on the right. The radio cannot show non-ASCII letters, and the raw file never shows the country. Radio IDs and callsigns are hidden.",
+            cmpPrev: "Previous example",
+            cmpNext: "Next example",
+            cmpAlt: "Radio screen comparison"
         }
     };
+
+    // Karşılaştırma görselleri (tools/compare/render.py); sıra examples.json ile aynı.
+    // [TR yazı, EN yazı, ülke]
+    const CMP = [
+        ["Kiril", "Cyrillic", "Russia"], ["Kiril", "Cyrillic", "Russia"], ["Kiril", "Cyrillic", "Belarus"],
+        ["Çince", "Chinese", "China"], ["Çince", "Chinese", "China"],
+        ["Korece", "Korean", "Korea"], ["Korece", "Korean", "Korea"],
+        ["Yunanca", "Greek", "Greece"], ["Yunanca", "Greek", "Greece"],
+        ["İbranice", "Hebrew", "Israel"], ["Tayca", "Thai", "Thailand"],
+        ["Türkçe", "Turkish", "Turkiye"], ["Türkçe", "Turkish", "Turkiye"],
+        ["Almanca", "German", "Germany"], ["Lehçe", "Polish", "Poland"], ["Çekçe", "Czech", "Czech Republic"],
+        ["İsveççe", "Swedish", "Sweden"], ["İspanyolca", "Spanish", "Spain"],
+        ["Portekizce", "Portuguese", "Brazil"], ["BÜYÜK HARF", "ALL CAPS", "Costa Rica"]
+    ];
+    let cmpIndex = 0;
+
+    function renderCompare() {
+        const en = document.documentElement.lang === "en";
+        const [tr, eng, country] = CMP[cmpIndex];
+        const nn = String(cmpIndex + 1).padStart(2, "0");
+        const img = document.getElementById("cmp-img");
+        img.src = `assets/compare/${nn}.webp`;
+        img.alt = `${STRINGS[en ? "en" : "tr"].cmpAlt}: ${en ? eng : tr}, ${country}`;
+        document.getElementById("cmp-n").textContent = `${cmpIndex + 1} / ${CMP.length}`;
+        document.getElementById("cmp-c").textContent = `${en ? eng : tr} · ${country}`;
+        // bir sonrakini önceden yükle, geçişte boş kare görünmesin
+        new Image().src = `assets/compare/${String((cmpIndex + 1) % CMP.length + 1).padStart(2, "0")}.webp`;
+    }
+
+    function stepCompare(d) {
+        cmpIndex = (cmpIndex + d + CMP.length) % CMP.length;
+        renderCompare();
+    }
+    document.getElementById("cmp-prev").addEventListener("click", () => stepCompare(-1));
+    document.getElementById("cmp-next").addEventListener("click", () => stepCompare(1));
 
     // Tarih de sayılar da aynı dosyadan geliyor, bu yüzden ayrışamazlar.
     // Anahtarlar tek tek okunuyor: stats.json'a yeni bir alan eklendiğinde
@@ -324,6 +391,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
         document.querySelectorAll(".lang [data-lang]").forEach(b =>
             b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
         renderCounts();
+        renderCompare();
     }
 
     document.querySelectorAll(".lang [data-lang]").forEach(b => b.addEventListener("click", () => {

@@ -1,13 +1,13 @@
 # HANDOFF
 
-Son güncelleme: 2026-10-22
+Son güncelleme: 2026-11-01
 
 ## Durum
 
 Üretim çalışıyor ve sağlıklı. Her gün radioid.net'ten altı CSV üretilip
 https://contacts.aprsagent.com adresine (GitHub Pages) yayınlanıyor (kesin saat yok, bkz. 8. iş);
 iş başarısız olursa `uretim-hatasi` etiketiyle issue açılıyor. Bozuk indirme mevcut çıktının
-üzerine yazamıyor. 111 test `generator.py`'den önce koşuyor.
+üzerine yazamıyor. 115 test `generator.py`'den önce koşuyor.
 
 Açık listede **yapılmayı bekleyen iş yok** — kalan iki madde de bilinçli kararla beklemede
 (aşağıda gerekçeleriyle). Yeni bir yön belirlenmeden buradan devam edilecek bir şey yok.
@@ -296,6 +296,32 @@ ASCII dışı karakter, 16'yı aşan ad, boş ad, boşluk/satır sonu sorunu, s�
   düzenlediği için satır o oturuma iletildi; `1d448a4` ile eklendi, kullanıcı onayıyla
   push'landı, canlıda ölçüldü (koyu → `#1b1a16`, açık → `#f6f3ea`, konsolda hata yok).
   Sınav sitesine kullanıcının isteğiyle dokunulmadı.
+
+### 13. Telsiz ekranı karşılaştırma görselleri ve iki çeviri düzeltmesi (2026-11-01)
+
+Kullanıcı iki D890UV'ye biri ham radioid `user.csv`, biri bizim liste yüklenmiş hâlde 17
+fotoğraf çekti. Ölçülen ham dosya davranışı: **sütunlar bir kayıyor** (konum satırları
+soyad / şehir / bölge; ülke hiç görünmüyor, tek isimli kişide isimden sonra boş satır),
+"İzmit" ekranda `??zmit`, uzun satırı telsiz `..` ile kesiyor. Bizim listede hata yok.
+
+- **Görseller:** `assets/compare/01..20.webp`, sayfada "Telsiz ekranında fark" bölümünde
+  ileri/geri düğmeli tek görsel (yalnız gösterilen yüklenir). Üretici
+  `tools/compare/render.py` (Pillow + Edge, CI'da çalışmaz), veri `tools/compare/examples.json`.
+  Sağ taraf generator.py'nin fonksiyonlarıyla hesaplanır; kod değişirse betiği yeniden çalıştır.
+- **Anonimleştirme (kullanıcı kuralı):** Radio ID'nin son 3 hanesi, çağrı işaretinin ilk 3
+  karakterinden sonrası kırmızı bantlı; adlar açık, örnekler tek isimli kişilerden.
+  `examples.json`'da gizli kısımların yalnızca uzunluğu var — gerçek ID/çağrı işareti depoda yok.
+- **Varsayım:** soldaki `?` sayısı (ASCII dışı harf başına UTF-8 bayt kadar) yalnız Türkçe
+  İ için fotoğrafla doğrulandı; Kiril/CJK/Tayca vb. için varsayım. Fotoğraf gelirse düzelt.
+- **Bulunan ve düzeltilen:** büyük/küçük kararı artık ham değere bakıyor (Yunanca Φ -> "Ph"
+  yüzünden "ΖΩΓΡΑΦΟΥ" -> "ZOGRAPhOU" kalıyordu); unidecode'un ters tırnağı atılıyor (Tayca
+  "Emuue`Ng"). 2026-11-01 verisinde 13 alan değişti, hepsi düzelme.
+- **Açık, düzeltilmedi:** Japonca kanji Çince okunuyor (東京 -> "Dong Jing", 大阪 -> "Da Ban");
+  düzeltmek ayrı bir Japonca okuma kütüphanesi ister. Japonya örneklerde yok.
+  Korece/İbranice/Tayca çeviriler okunur ama standart değil ("Ijeongsig", "Aylt").
+- **Tuzak:** Windows PowerShell 5.1'de `Get-Content -Raw` UTF-8'i ANSI okuyor; dosyayı onunla
+  okuyup geri yazmak Türkçe karakterleri bozar (bu oturumda HANDOFF bozuldu, git'ten alındı).
+  Metin düzenlemek için Edit aracı ya da `-Encoding utf8`.
 
 ## Ölçülen sonuç (2026-09-07 verisi)
 
