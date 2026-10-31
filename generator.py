@@ -140,7 +140,7 @@ def is_lowercase_word(token: str) -> bool:
             and token not in LOWERCASE_CONNECTORS)
 
 
-def normalize_case(value: str) -> str:
+def normalize_case(value: str, source: str | None = None) -> str:
     """CAPS LOCK ile ya da tamamen küçük harfle girilmiş parçaları düzeltir.
 
     radioid.net kayıtlarının bir kısmı "ESMERALDO", bir kısmı "adriano" biçiminde;
@@ -166,10 +166,17 @@ def normalize_case(value: str) -> str:
 
     Tamamı büyük yazılmış bir ad zaten kendi iç kutulamasını kaybetmiş durumda;
     "MCDONALD" buradan "Mcdonald" çıkar, "McDonald" değil. Bilgi kaynakta yok.
+
+    `source` harf çevirisinden önceki ham değerdir; karar onun büyük/küçük harflerine
+    bakılarak verilir. Çeviri tek harfi ikiye açabiliyor (Yunanca Φ -> "Ph"), bu yüzden
+    tamamı büyük "ΖΩΓΡΑΦΟΥ" çeviriden sonra karışık "ZOGRAPhOU" görünüp düzeltilmiyordu.
+    Kaynakta büyük/küçük harf ayrımı yoksa (Çince, Korece, Tayca) çevrilmiş değere bakılır.
     """
-    letters = [c for c in value if c.isalpha()]
-    uniform = (all(c.isupper() for c in letters)
-               or all(c.islower() for c in letters))
+    cased = [c for c in (source or value) if c.isupper() or c.islower()]
+    if not cased:
+        cased = [c for c in value if c.isupper() or c.islower()]
+    uniform = (all(c.isupper() for c in cased)
+               or all(c.islower() for c in cased))
     if not uniform:
         return " ".join(token.title() if is_lowercase_word(token) else token
                         for token in value.split())
@@ -180,7 +187,7 @@ def normalize_case(value: str) -> str:
 def clean_name(first: str, last: str) -> str:
     # Ad ve soyad ayrı kutulanıyor: "Jean" + "DUPONT" birleşince karışık kutulu
     # tek alan olur ve normalize_case ona dokunmaz; ayrı ayrı bakınca soyad düzelir.
-    parts = [normalize_case(unidecode(p)) for p in (first, last) if p.strip()]
+    parts = [normalize_case(transliterate_field(p), p) for p in (first, last) if p.strip()]
     return truncate_name(" ".join(p for p in parts if p))
 
 
@@ -189,14 +196,15 @@ def transliterate_field(value: str) -> str:
 
     Boşluk yine de sadeleştiriliyor: unidecode CJK karakterlerin arkasına boşluk
     bırakıyor ("张三" -> "Zhang San "), alan içindeki satır sonu da CSV'de çok
-    satırlı bir hücre üretirdi.
+    satırlı bir hücre üretirdi. unidecode'un bazı işaretler için bıraktığı ters
+    tırnak da atılıyor: Tayca "เมือง" -> "emuue`ng", ekranda "Emuue`Ng" görünüyordu.
     """
-    return " ".join(unidecode(value).split())
+    return " ".join(unidecode(value).replace("`", "").split())
 
 
 def clean_place(value: str) -> str:
     """Şehir ve bölge alanları da karışık kutulu geliyor (FORTALEZA, osasco)."""
-    return normalize_case(transliterate_field(value))
+    return normalize_case(transliterate_field(value), value)
 
 
 def parse_dmr(raw: str) -> list[dict]:
@@ -268,8 +276,10 @@ def parse_nxdn(raw: str) -> list[dict]:
 
         first_raw = row.get("FIRST_NAME", "").strip()
         last_raw = row.get("LAST_NAME", "").strip()
-        first = truncate_name(normalize_case(unidecode(first_raw))) if first_raw else ""
-        last = truncate_name(normalize_case(unidecode(last_raw))) if last_raw else ""
+        first = (truncate_name(normalize_case(transliterate_field(first_raw), first_raw))
+                 if first_raw else "")
+        last = (truncate_name(normalize_case(transliterate_field(last_raw), last_raw))
+                if last_raw else "")
         if first != first_raw or last != last_raw:
             transliterated += 1
 

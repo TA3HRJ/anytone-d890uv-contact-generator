@@ -64,6 +64,23 @@ def test_clean_name_never_exceeds_limit(first, last):
 
 # --- ASCII harf çevirisi ------------------------------------------------------
 
+def test_all_caps_greek_is_fixed_although_transliteration_mixes_case():
+    # Φ -> "Ph": çeviriden sonra "ZOGRAPhOU" karışık görünüyordu, düzeltilmiyordu
+    assert g.clean_place("ΖΩΓΡΑΦΟΥ") == "Zographou"
+
+
+def test_mixed_case_source_is_still_left_alone():
+    assert g.clean_place("Frankfurt am Main") == "Frankfurt am Main"
+
+
+def test_caseless_script_falls_back_to_transliterated_value():
+    # Korece/Çince'de büyük-küçük harf yok; karar çevrilmiş metne göre verilir
+    assert g.clean_name("김", "") == "Gim"
+
+
+def test_transliteration_leaves_no_backtick():
+    assert "`" not in g.clean_place("เมือง")
+
 @pytest.mark.parametrize("raw,expected", [
     ("Çetin", "Cetin"),
     ("Güneş", "Gunes"),
