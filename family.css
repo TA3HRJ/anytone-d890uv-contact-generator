@@ -52,14 +52,15 @@ img{max-width:100%}
 .fam-bar{border-bottom:1px solid var(--fg);background:var(--bg);position:sticky;top:5px;z-index:10}
 /* iç kutunun adı .fam-row: sitelerde ilerleme çubuğu için yaygın olan .bar ile çakışmasın (coax'ta çakıştı) */
 .fam-bar .fam-row{display:flex;align-items:center;gap:14px;min-height:58px}
-.fam-home{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--fg2);
-  font:600 12px var(--mono);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
-.fam-home:hover{color:var(--accent)}
+.fam-home{display:inline-flex;align-items:center;text-decoration:none;color:var(--fg);
+  font:600 15px var(--mono);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.fam-home .t span{color:var(--accent)}
+.fam-home:hover{color:var(--fg);text-decoration:none}
 
-/* İşaret (1.5): ana sayfadaki gibi tıklayınca büyük görünüm açar; "aprsagent.com" yazısı eve gider.
+/* İşaret ve yazı (1.6): ana sayfadaki .brand'ın aynısı. İşaret büyük görünüm açar; APRS-Agent yazısı eve gider.
    Dar ekranda yazı gizlenir, eve dönüş büyük görünümdeki bağlantıdan ve alt bilgiden. */
-.fam-mark{display:block;flex:none;line-height:0;margin-right:-6px;border-radius:6px;cursor:zoom-in}
-.fam-mark img{width:24px;height:24px;display:block;transition:transform .15s ease}
+.fam-mark{display:block;flex:none;line-height:0;margin-right:-5px;border-radius:6px;cursor:zoom-in}
+.fam-mark img{width:26px;height:26px;display:block;transition:transform .15s ease}
 .fam-mark:hover img{transform:scale(1.08)}
 .fam-mark:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
 .fam-logo{border:0;padding:0;margin:auto;background:transparent;max-width:none;max-height:none;
