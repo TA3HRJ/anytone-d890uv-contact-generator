@@ -54,8 +54,27 @@ img{max-width:100%}
 .fam-bar .fam-row{display:flex;align-items:center;gap:14px;min-height:58px}
 .fam-home{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--fg2);
   font:600 12px var(--mono);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
-.fam-home img{width:24px;height:24px;display:block}
 .fam-home:hover{color:var(--accent)}
+
+/* İşaret (1.5): ana sayfadaki gibi tıklayınca büyük görünüm açar; "aprsagent.com" yazısı eve gider.
+   Dar ekranda yazı gizlenir, eve dönüş büyük görünümdeki bağlantıdan ve alt bilgiden. */
+.fam-mark{display:block;flex:none;line-height:0;margin-right:-6px;border-radius:6px;cursor:zoom-in}
+.fam-mark img{width:24px;height:24px;display:block;transition:transform .15s ease}
+.fam-mark:hover img{transform:scale(1.08)}
+.fam-mark:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
+.fam-logo{border:0;padding:0;margin:auto;background:transparent;max-width:none;max-height:none;
+  overflow:visible;cursor:zoom-out;color:#f6f3ea;text-align:center}
+.fam-logo::backdrop{background:rgba(23,20,15,.8);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.fam-logo img{display:block;width:min(72vmin,420px);height:auto;filter:drop-shadow(0 22px 48px rgba(0,0,0,.5))}
+.fam-logo p{margin:18px 0 0;font:600 15px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.fam-logo p span{color:#e2645f}
+.fam-logo a{display:inline-block;margin-top:10px;padding:4px 8px;font:12px var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:#f6f3ea;opacity:.8;text-decoration:none;cursor:pointer}
+.fam-logo a:hover{opacity:1;text-decoration:underline}
+.fam-logo[open]{animation:fam-lv .18s ease-out}
+@keyframes fam-lv{from{opacity:0;transform:scale(.94)}}
+@media (prefers-reduced-motion:reduce){.fam-logo[open]{animation:none}.fam-mark img{transition:none}}
+@media (max-width:600px){.fam-home{display:none}.fam-mark{margin-right:0}}
 .fam-sep{width:1px;height:22px;background:var(--hair)}
 .fam-site{font:700 14px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--fg);
   text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

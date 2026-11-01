@@ -46,9 +46,8 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
 <body>
 <header class="fam-bar">
     <div class="wrap fam-row">
-        <a class="fam-home" href="https://aprsagent.com/#tools" title="aprsagent.com — Telsizci araçları / Ham radio tools">
-            <img src="assets/aprsagent-mark.svg" alt=""><span class="t">aprsagent.com</span>
-        </a>
+        <a class="fam-mark" href="assets/aprsagent-mark.svg" data-fam-logo title="APRS-Agent logo — büyük görünüm · large view" aria-label="APRS-Agent logo — büyük görünüm · large view"><img src="assets/aprsagent-mark.svg" alt="" width="24" height="24"></a>
+        <a class="fam-home" href="https://aprsagent.com/#tools" title="aprsagent.com — Telsizci araçları / Ham radio tools"><span class="t">aprsagent.com</span></a>
         <span class="fam-sep" aria-hidden="true"></span>
         <a class="fam-site" href="./">CONTACTS</a>
         <span class="sp"></span>
@@ -60,6 +59,11 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
         <a class="ghl" href="https://github.com/TA3HRJ/anytone-d890uv-contact-generator" rel="noopener">GitHub ↗</a>
     </div>
 </header>
+<dialog class="fam-logo" id="fam-logo" aria-label="APRS-Agent logo">
+  <img src="assets/aprsagent-mark.svg" alt="APRS-Agent logo">
+  <p>APRS<span>-Agent</span></p>
+  <a href="https://aprsagent.com/">aprsagent.com →</a>
+</dialog>
 
 <main>
     <div class="wrap hero">
@@ -419,5 +423,10 @@ document.addEventListener("click",function(e){
   document.dispatchEvent(new CustomEvent("themechange",{detail:n}));
 });
 </script>
+<script>(function(){var d=document.getElementById("fam-logo");
+if(!d||typeof d.showModal!=="function")return;
+document.querySelectorAll("[data-fam-logo]").forEach(function(a){a.addEventListener("click",function(e){
+e.preventDefault();d.showModal();});});
+d.addEventListener("click",function(e){if(!e.target.closest("a"))d.close();});})();</script>
 </body>
 </html>
