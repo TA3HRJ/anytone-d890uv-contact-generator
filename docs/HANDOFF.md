@@ -322,6 +322,8 @@ soyad / şehir / bölge; ülke hiç görünmüyor, tek isimli kişide isimden so
 - **Tuzak:** Windows PowerShell 5.1'de `Get-Content -Raw` UTF-8'i ANSI okuyor; dosyayı onunla
   okuyup geri yazmak Türkçe karakterleri bozar (bu oturumda HANDOFF bozuldu, git'ten alındı).
   Metin düzenlemek için Edit aracı ya da `-Encoding utf8`.
+- **Yayında (2026-11-01, elle tetiklenen koşu 41277493697, `e865c10`):** canlıda 20 görselin
+  hepsi yükleniyor (2000 px), ileri/geri ve TR metni çalışıyor.
 
 ## Ölçülen sonuç (2026-09-07 verisi)
 
