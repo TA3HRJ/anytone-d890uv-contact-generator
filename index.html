@@ -33,6 +33,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
         .cmp figcaption { display: flex; align-items: center; gap: 12px; padding: 10px 12px;
                           border-top: 1px solid var(--line); font: 13px var(--mono); color: var(--fg2); }
         .cmp figcaption .sp { flex: 1; }
+        .cmp-note { margin: 8px 0 0; font-size: 12px; color: var(--fg2); }
         .fam-line .sp { flex: 1; }
         .legal h2:not(:first-child) { margin-top: 30px; }
         @media (max-width: 600px) {
@@ -136,6 +137,7 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
                     <button class="btn s sm" type="button" id="cmp-next" data-i-aria="cmpNext" aria-label="Sonraki örnek">&rsaquo;</button>
                 </figcaption>
             </figure>
+            <p class="cmp-note" data-i="cmpNote">Ekranlar Claude yapay zekâsıyla canlandırılmıştır.</p>
         </div>
     </section>
 
@@ -263,7 +265,8 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
             cmpSub: "Aynı çağrı, iki telsiz: solda radioid.net'in dosyası olduğu gibi, sağda bu liste. Telsiz ASCII dışı harfleri gösteremiyor; ülke de ham dosyada hiç görünmüyor. Radio ID ve çağrı işaretleri gizlendi.",
             cmpPrev: "Önceki örnek",
             cmpNext: "Sonraki örnek",
-            cmpAlt: "Telsiz ekranı karşılaştırması"
+            cmpAlt: "Telsiz ekranı karşılaştırması",
+            cmpNote: "Ekranlar Claude yapay zekâsıyla canlandırılmıştır."
         },
         en: {
             title: "AnyTone D890UV contact lists",
@@ -319,7 +322,8 @@ var m=document.querySelector('meta[name="theme-color"]');if(m&&t==="dark")m.cont
             cmpSub: "The same call on two radios: radioid.net's file as it is on the left, this list on the right. The radio cannot show non-ASCII letters, and the raw file never shows the country. Radio IDs and callsigns are hidden.",
             cmpPrev: "Previous example",
             cmpNext: "Next example",
-            cmpAlt: "Radio screen comparison"
+            cmpAlt: "Radio screen comparison",
+            cmpNote: "The screens were recreated with Claude AI."
         }
     };
 
